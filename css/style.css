@@ -1,0 +1,18 @@
+body{
+	background: #212121;
+    display: grid;
+}
+#principal{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+#logo_menu{
+    align-items: center;
+    justify-content: center;
+}
+#aba-lateral-login{
+    float: left;
+}
+#aba-lateral-marca{
+    float: right;
+}
