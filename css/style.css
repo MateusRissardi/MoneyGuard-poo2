@@ -1,18 +1,39 @@
+*{
+	margin: 0;
+	padding: 0;
+}
 body{
-	background: #212121;
+	background: #040404;
     display: grid;
 }
 #principal{
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 25%;
+    margin-right: 25%;
+    color: #fff;
 }
 #logo_menu{
+}
+#secao-login{
+    float: left;
+    padding: 20px;
+    height: 500px;
+    width: 800px;
+    display: grid;
     align-items: center;
     justify-content: center;
 }
-#aba-lateral-login{
-    float: left;
-}
-#aba-lateral-marca{
+#secao-marca{
     float: right;
+    background-color: #15151e;
+    border-radius: 3%;
+    height: 1000px;
+    width: 800px;
+    align-items: center;
+    justify-content: center;
+}
+.img{
+    margin-top: 10%;
+    margin-left: 30%;
+    margin-right: 25%;
+    height: 100vh;
 }
