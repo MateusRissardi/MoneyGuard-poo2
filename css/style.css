@@ -2,6 +2,7 @@
 	margin: 0;
 	padding: 0;
 }
+
 body{
 	background: #040404;
     display: grid;
@@ -22,6 +23,10 @@ body{
     align-items: center;
     justify-content: center;
 }
+#secao-login p{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
 #secao-marca{
     float: right;
     background-color: #15151e;
@@ -36,4 +41,9 @@ body{
     margin-left: 30%;
     margin-right: 25%;
     height: 100vh;
+}
+
+#botao-login{
+    width: 100%;
+    border-radius: 100%;
 }
