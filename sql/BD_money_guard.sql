@@ -56,3 +56,5 @@ CREATE TABLE "Settlement" (
     "data_pagamento" DATE NOT NULL,
     CHECK ("id_devedor" <> "id_credor")
 );
+
+ALTER TABLE "Group" ADD COLUMN "codigo_data_geracao" TIMESTAMP;
