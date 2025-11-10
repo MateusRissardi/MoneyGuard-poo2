@@ -18,7 +18,6 @@ input {
     border: 1px solid red !important;
 }
 
-#logo_menu {}
 
 
 #secao-login {
@@ -28,6 +27,7 @@ input {
 #secao-login,
 #secao-marca {
     padding: 100px;
+    height: 98vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -43,12 +43,12 @@ input {
 #secao-marca {
     /* float: right; */
     background-color: #15151e;
-    /* border-radius: 3%; */
+    border-radius: 3%;
+    margin-top: 0.5%;
     /* height: 100%; */
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    gap: 250px;
+    gap: 200px;
 }
 /* 
 .img {
