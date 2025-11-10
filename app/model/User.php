@@ -1,0 +1,76 @@
+<?php
+
+class User
+{
+    private $conn;
+    private $table = '"User"';
+
+    public function __construct($db)
+    {
+        $this->conn = $db;
+    }
+
+    public function login($email, $senha)
+    {
+        try {
+            $user = $this->findByEmail($email);
+
+            if (!$user) {
+                return "Credenciais de login inválidas.";
+            }
+
+            if (password_verify($senha, $user['senha_hash'])) {
+                unset($user['senha_hash']);
+                return $user;
+            } else {
+                return "Credenciais de login inválidas.";
+            }
+
+        } catch (PDOException $e) {
+            return "Erro de login: " . $e->getMessage();
+        }
+    }
+
+    public function register($nome, $email, $senha, $data_nascimento)
+    {
+        try {
+            if ($this->findByEmail($email)) {
+                return "E-mail já cadastrado."; // (MSG24)
+            }
+
+            $senha_hash = password_hash($senha, PASSWORD_BCRYPT);
+
+            $query = "INSERT INTO " . $this->table . " (nome, email, senha_hash, data_nascimento)
+                      VALUES (:nome, :email, :senha_hash, :data_nasc)
+                      RETURNING id_usuario";
+
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':senha_hash', $senha_hash);
+            $stmt->bindParam(':data_nasc', $data_nascimento);
+
+            $stmt->execute();
+
+            return $stmt->fetchColumn();
+
+        } catch (PDOException $e) {
+            return "Erro ao cadastrar: " . $e->getMessage();
+        }
+    }
+
+    public function findByEmail($email)
+    {
+        $query = "SELECT * FROM " . $this->table . " WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch();
+        }
+        return false;
+    }
+}
+?>
