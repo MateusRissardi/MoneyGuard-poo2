@@ -1,0 +1,30 @@
+:root {
+    --color-background: #040404;
+    --color-background-panel: #040404;
+    --color-text: #FFFFFF;
+    --color-text-secondary: #A0A0A0;
+    --color-primary: #D9A404;
+    --color-error: #e74c3c;
+    --color-success: #2ecc71;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-background) !important;
+    color: var(--color-text);
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

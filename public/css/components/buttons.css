@@ -1,0 +1,22 @@
+.btn {
+    padding: 0.9rem 1.5rem;
+    border: none;
+    border-radius: 50px !important;
+    font-size: 1.1rem;
+    font-weight: bold !important;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-background) !important;
+}
+
+.btn-primary:hover {
+    background-color: #f0b90b !important;
+}
+
+.btn-block {
+    width: 100%;
+}

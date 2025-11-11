@@ -1,64 +1,20 @@
-* {
-    margin: 0;
-    padding: 0;
-}
+@import url("base/variables.css");
+@import url("base/reset.css");
+@import url("base/typography.css");
 
-body {
-    background: #040404;
-    /* display: grid; */
-}
+@import url("layout/header.css");
+@import url("layout/footer.css");
+@import url("layout/auth_layout.css");
+@import url("layout/auth_footer.css");
+@import url("layout/grid.css");
+@import url("layout/sidebar.css");
 
-#principal {
-    display: flex;
-    align-items: center;
-    color: #fff;
-}
-
-input {
-    border: 1px solid red !important;
-}
+@import url("components/buttons.css");
+@import url("components/inputs.css");
+@import url("components/cards.css");
+@import url("components/alerts.css");
+@import url("components/modals.css");
+@import url("components/form.css");
 
 
-
-#secao-login {
-    height: fit-content;
-}
-
-#secao-login,
-#secao-marca {
-    padding: 100px;
-    height: 98vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#secao-login p {
-    margin-top: 50px;
-    margin-bottom: 50px;
-
-}
-
-#secao-marca {
-    /* float: right; */
-    background-color: #15151e;
-    border-radius: 3%;
-    margin-top: 0.5%;
-    /* height: 100%; */
-    align-items: center;
-    justify-content: center;
-    gap: 200px;
-}
-/* 
-.img {
-    margin-top: 10%;
-    margin-left: 30%;
-    margin-right: 25%;
-    height: 100vh;
-}
-
-#botao-login {
-    width: 100%;
-    border-radius: 100%;
-} */
+@import url("pages/login.css");
