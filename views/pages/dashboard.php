@@ -45,7 +45,7 @@ require_once '../views/components/header.php';
     <?php endif; ?>
 </div>
 
-
 <?php
+
 require_once '../views/components/footer.php';
 ?>

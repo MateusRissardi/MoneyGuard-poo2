@@ -1,59 +1,107 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once '../views/components/auth_header.php';
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MoneyGuard</title>
-</head>
+<div class="auth-container">
 
-<body>
+    <section class="auth-form-section">
+        <div class="auth-form-wrapper">
+            <img src="images/logo.svg" alt="MoneyGuard Logo" class="auth-logo">
 
-    <h2>Acesse sua conta (CDU02)</h2>
-    <p>Implementa HU002 (Autenticar usuário)</p>
+            <div class="content-login">
+                <p class="auth-title">Bem vindo de volta!</p>
 
-    <form action="login" method="POST">
+                <form action="login" method="POST" class="auth-form">
 
-        <?php if (isset($error)): ?>
-            <div style="color: red; border: 1px solid red; padding: 10px;">
-                <?php echo htmlspecialchars($error); ?>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha">Senha</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                            <i class="fa-solid fa-eye-slash input-icon-toggle input-icon me-0" id="toggleIcon"
+                                onclick="togglePassword()"></i>
+                        </div>
+                    </div>
+
+                    <!-- <div class="form-options">
+                        <a href="#" class="form-link">Esqueceu a senha? <span
+                                style="color: var(--color-primary)">Recupere</span></a>
+                    </div> -->
+
+                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                </form>
+
+                <div class="form-options">
+                    <a href="register" class="form-link">Não possui login? <span
+                            style="color: var(--color-primary)">Cadastre-se</span></a>
+                </div>
+
+                <div class="auth-messages">
+                    <?php if (isset($error)): ?>
+                        <div class="alert alert-error">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <?php echo htmlspecialchars($error); ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
+                        <div class="alert alert-success">
+                            <i class="fa-solid fa-check"></i>
+                            Usuário cadastrado com sucesso! Faça o login. (MSG08)
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
-            <div style="color: green; border: 1px solid green; padding: 10px;">
-                Usuário cadastrado com sucesso! Faça o login. (MSG08)
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'success_joined'): ?>
-            <div style="color: green; border: 1px solid green; padding: 10px;">
-                Usuário cadastrado e adicionado ao grupo com sucesso! Faça o login. (MSG34)
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'success_join_failed'): ?>
-            <div style="color: #cc8a00; border: 1px solid #cc8a00; padding: 10px;">
-                Usuário cadastrado, mas falha ao entrar no grupo:
-                <b><?php echo htmlspecialchars($_GET['join_error']); ?></b> (MSG21 ou MSG31)
-            </div>
-        <?php endif; ?>
-        
-        <div>
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required>
         </div>
-        <br>
-        <div>
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
+    </section>
+
+    <section class="auth-brand-section">
+        <div class="animation-wrapper">
+            <div class="highlight-animation"></div>
+            <img src="images/logo-centro.svg" class="coin-center" alt="Centro">
+            <div class="orbit outer-orbit">
+                <img src="images/circulo-externo.svg" class="orbit-path" alt="Círculo externo">
+
+                <div class="avatar" style="--top: -0%; --left: 50%;">
+                    <img src="images/avatar-4.svg" alt="Avatar 4">
+                </div>
+                <div class="avatar" style="--top: 75%; --left: 10%;">
+                    <img src="images/avatar-5.svg" alt="Avatar 5">
+                </div>
+                <div class="avatar" style="--top: 90%; --left: 80%;">
+                    <img src="images/avatar-6.svg" alt="Avatar 6">
+                </div>
+            </div>
+
+            <div class="orbit inner-orbit">
+                <img src="images/circulo-interno.svg" class="orbit-path" alt="Círculo interno">
+
+                <div class="avatar" style="--top: 0%; --left: 50%;">
+                    <img src="images/avatar-1.svg" alt="Avatar 1">
+                </div>
+                <div class="avatar" style="--top: 75%; --left: 10%;">
+                    <img src="images/avatar-2.svg" alt="Avatar 2">
+                </div>
+                <div class="avatar" style="--top: 85%; --left: 80%;">
+                    <img src="images/avatar-3.svg" alt="Avatar 3">
+                </div>
+            </div>
         </div>
-        <br>
-        <button type="submit">Entrar (HU002)</button>
-    </form>
+        <div class="auth-brand-text">
+            <h3>O jeito mais fácil de</h3>
+            <h3>compartilhar <span class="highlight">contas</span></h3>
+            <p>Dividir contas com seus amigos nunca foi tão fácil</p>
+        </div>
+    </section>
+</div>
 
-    <p>Não tem uma conta? <a href="register">Cadastre-se</a></p>
-
-</body>
-
-</html>
+<?php
+require_once '../views/components/auth_footer.php';
+?>
