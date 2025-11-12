@@ -1,0 +1,11 @@
+.card-options {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #444 !important;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0.06px 0.03px 4.6px rgba(255, 255, 255, 0.13) inset;
+    border-radius: 20px;
+    outline: 1px white solid;
+    backdrop-filter: blur(7.58px);
+}

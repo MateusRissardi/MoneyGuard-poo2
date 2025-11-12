@@ -23,10 +23,15 @@ class GroupController
     public function index()
     {
         $groupModel = new Group($this->db);
-
         $grupos = $groupModel->getGroupsByUser($this->user_id);
 
-        require_once '../views/pages/dashboard.php';
+        if (empty($grupos)) {
+            require_once '../views/pages/dashboard.php';
+        } else {
+            $primeiro_grupo_id = $grupos[0]['id_grupo'];
+            header("Location: group/view/" . $primeiro_grupo_id);
+            exit;
+        }
     }
 
     // Método para CDU09 (Criar Grupo)
@@ -44,7 +49,7 @@ class GroupController
             $result = $groupModel->create($nome_grupo, $this->user_id);
 
             if (is_int($result)) {
-                header("Location: ../dashboard?status=group_created");
+                header("Location: ../group/view/" . $result . "?status=group_created");
                 exit;
             } else {
                 header("Location: ../dashboard?error=db_fail");
@@ -85,7 +90,6 @@ class GroupController
         if (isset($_GET['simplify']) && $_GET['simplify'] == '1') {
             $transacoes_simplificadas = $expenseModel->simplifyDebts($id_grupo);
         }
-
         require_once '../views/pages/group_view.php';
     }
 
@@ -119,6 +123,32 @@ class GroupController
             header("Location: ../group/view/$id_grupo?status=member_added");
         } else {
             header("Location: ../group/view/$id_grupo?error=" . urlencode($result));
+        }
+        exit;
+    }
+
+    public function joinWithCode()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            header("Location: ../dashboard");
+            exit;
+        }
+
+        $codigo_convite = $_POST['codigo_convite'];
+        $id_usuario_logado = $this->user_id;
+
+        if (empty($codigo_convite)) {
+            header("Location: ../dashboard?error=" . urlencode("O código de convite é obrigatório."));
+            exit;
+        }
+
+        $groupModel = new Group($this->db);
+        $result = $groupModel->joinWithCode($codigo_convite, $id_usuario_logado);
+
+        if (is_int($result)) {
+            header("Location: ../group/view/" . $result . "?status=group_joined");
+        } else {
+            header("Location: ../dashboard?error=" . urlencode($result));
         }
         exit;
     }

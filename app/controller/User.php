@@ -61,8 +61,6 @@ class UserController
             $email = $_POST['email'];
             $senha = $_POST['senha'];
             $data_nascimento = $_POST['data_nascimento'];
-            $codigo_convite = $_POST['codigo_convite'];
-
             if (empty($nome) || empty($email) || empty($senha) || empty($data_nascimento)) {
                 $error = "Todos os campos são obrigatórios.";
                 require_once '../views/pages/register.php';

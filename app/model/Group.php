@@ -194,7 +194,7 @@ class Group
                 'id_grupo' => $id_grupo
             ]);
 
-            return true;
+            return $id_grupo;
 
         } catch (PDOException $e) {
             return "Erro ao entrar no grupo: " . $e->getMessage();

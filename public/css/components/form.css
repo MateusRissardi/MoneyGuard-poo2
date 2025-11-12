@@ -13,3 +13,13 @@
     margin-top: 2rem;
     color: var(--color-text-secondary);
 }
+
+.form-group{
+    width: 100%;
+}
+
+.inputBtn{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}

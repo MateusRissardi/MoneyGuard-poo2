@@ -20,7 +20,7 @@ $user_name = $_SESSION['user_name'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoneyGuard</title>
-
+    <base href="/GitHub/MoneyGuard-poo2/public/">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -32,11 +32,9 @@ $user_name = $_SESSION['user_name'];
     <div class="main-content-wrapper">
 
         <header>
-            <h1>MoneyGuard</h1>
+            <h2 style="color: var(--color-primary) !important">MoneyGuard</h2>
             <nav>
-                <p>Olá, <?php echo htmlspecialchars($user_name); ?>!</p>
-                <a href="dashboard">Meus Grupos</a>
-                <a href="logout">Sair (Logout)</a>
+                <h5 style="font-weight: normal;">Olá, <?php echo htmlspecialchars($user_name); ?>!</h5>
             </nav>
         </header>
         <hr>

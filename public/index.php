@@ -45,6 +45,11 @@ switch (true) {
         $controller->addMember();
         break;
 
+    case ($url == 'group/join_with_code'):
+        $controller = new GroupController();
+        $controller->joinWithCode();
+        break;
+
     case ($url == 'expense/create'):
         $controller = new ExpenseController();
         $controller->create();

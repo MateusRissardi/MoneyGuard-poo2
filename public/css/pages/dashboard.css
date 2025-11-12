@@ -1,0 +1,15 @@
+.content-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.07);
+    background-blend-mode: linear_dodge;
+    box-shadow: -0.03px -0.06px 4.6px rgba(255, 255, 255, 0.13) inset;
+    border-radius: 50px;
+    outline: 1px white solid;
+    backdrop-filter: blur(7.5px);
+}
+
+.content-icon i {
+    font-size: 14px;
+    color: var(--color-primary);
+}
