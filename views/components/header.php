@@ -11,6 +11,20 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_name = $_SESSION['user_name'];
 
+require_once '../app/core/Database.php';
+require_once '../app/model/Group.php';
+
+try {
+    $db_sidebar = Database::getInstance()->getConnection();
+    $groupModel_sidebar = new Group($db_sidebar);
+    // Busca os grupos do usuário logado
+    $sidebar_grupos = $groupModel_sidebar->getGroupsByUser($_SESSION['user_id']);
+} catch (PDOException $e) {
+    // Em caso de erro, define como array vazio para não quebrar o layout
+    $sidebar_grupos = []; 
+    // Opcional: logar o erro
+    error_log("Erro ao buscar grupos para o sidebar: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +34,7 @@ $user_name = $_SESSION['user_name'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoneyGuard</title>
-    <base href="/GitHub/MoneyGuard-poo2/public/">
+    <base href="/MoneyGuard-poo2/public/">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -28,7 +42,9 @@ $user_name = $_SESSION['user_name'];
 </head>
 
 <body>
-    <?php require_once '../views/components/sidebar.php' ?>
+    <?php 
+        require_once '../views/components/sidebar.php' 
+    ?>
     <div class="main-content-wrapper">
 
         <header>

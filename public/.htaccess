@@ -1,6 +1,6 @@
 # /public/.htaccess
 RewriteEngine On
-RewriteBase /GitHub/MoneyGuard-poo2/public/
+RewriteBase /MoneyGuard-poo2/public/
 
 # Se o arquivo ou diretório solicitado não existir...
 RewriteCond %{REQUEST_FILENAME} !-f

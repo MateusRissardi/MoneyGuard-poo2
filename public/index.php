@@ -26,10 +26,14 @@ switch (true) {
         break;
 
     case ($url == 'dashboard'):
-        $controller = new GroupController();
-        $controller->index();
+        require_once '../views/pages/dashboard.php';
         break;
 
+    case ($url == 'groups'):
+        // Esta rota agora carrega sua nova página de lista de grupos
+        require_once '../views/pages/groups_list.php';
+        break;
+        
     case ($url == 'group/create'):
         $controller = new GroupController();
         $controller->create();
@@ -100,14 +104,23 @@ switch (true) {
         $controller->delete();
         break;
 
+        
     case ($url == 'group/remove_member'):
         $controller = new GroupController();
         $controller->removeMember();
         break;
 
+    case ($url == 'transaction'):
+       require_once '../views/pages/transaction.php';
+       exit;
+
+    case ($url == 'recent_activities'):
+        require_once '../views/pages/recent_activities.php';
+        exit;
+
     case ($url == ''):
         if (isset($_SESSION['user_id'])) {
-            header("Location: dashboard");
+            header("Location: groups");
         } else {
             header("Location: login");
         }
