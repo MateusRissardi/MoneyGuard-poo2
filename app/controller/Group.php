@@ -79,7 +79,7 @@ class GroupController
 
         $grupo = $groupModel->getGroupById($id_grupo);
         $membros = $groupModel->getMembersByGroup($id_grupo); // (CDU10)
-        $despesas = $groupModel->getExpensesByGroup($id_grupo, $filtros); // (CDU07)
+        $despesas = $groupModel->getExpensesByGroup($id_grupo, $this->user_id, $filtros);// (CDU07)
         $acertos = $groupModel->getSettlementsByGroup($id_grupo);
 
         require_once '../app/model/Expense.php';

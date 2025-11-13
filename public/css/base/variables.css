@@ -33,3 +33,10 @@ a:hover {
 h2, h5, h4{
     color: var(--color-text) !important;
 }
+
+hr{
+    color: var(--color-text-secondary) !important;
+}
+h5{
+    font-weight: normal !important;
+}

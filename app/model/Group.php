@@ -84,14 +84,21 @@ class Group
         return $stmt->fetchAll();
     }
 
-    public function getExpensesByGroup($id_grupo, $filtros = [])
+    public function getExpensesByGroup($id_grupo, $id_usuario_logado, $filtros = [])
     {
-        $query = 'SELECT e.*, u.nome as nome_pagador 
+        $query = 'SELECT 
+                    e.*, 
+                    u.nome as nome_pagador,
+                    es.valor_devido
                   FROM "Expense" e
                   JOIN "User" u ON e.id_pagador = u.id_usuario
+                  LEFT JOIN "ExpenseSplit" es ON e.id_despesa = es.id_despesa AND es.id_participante = :id_usuario_logado
                   WHERE e.id_grupo = :id_grupo';
 
-        $params = ['id_grupo' => $id_grupo];
+        $params = [
+            'id_grupo' => $id_grupo,
+            'id_usuario_logado' => $id_usuario_logado
+        ];
 
         if (!empty($filtros['categoria'])) {
             $query .= ' AND e.categoria = :categoria';

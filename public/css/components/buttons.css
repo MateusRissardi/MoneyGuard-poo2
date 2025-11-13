@@ -42,3 +42,8 @@
     font-size: 40px;
 
 }
+
+.btn.disabled {
+    background-color: #555 !important;
+    cursor: not-allowed;
+}

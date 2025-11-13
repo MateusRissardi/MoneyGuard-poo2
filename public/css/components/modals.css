@@ -13,10 +13,12 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s, visibility 0.3s;
+    display: none;
 }
 
 .modal-overlay.visible {
     opacity: 1;
+    display: flex;
     visibility: visible;
 }
 
@@ -71,4 +73,198 @@
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background-color: #222;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.modal-close {
+    color: #aaa;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-content h3,
+.modal-content h4 {
+    color: var(--color-primary) !important;
+}
+
+.modal-content label {
+    color: #fff !important;
+}
+
+
+#modal-add-expense .modal-content {
+    padding: 1.5rem;
+    max-width: 480px;
+    background: #1C1C1E;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#modal-add-expense h3 {
+    color: #fff !important;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#modal-add-expense .modal-close {
+    color: var(--color-primary);
+}
+
+#modal-add-expense label {
+    color: #aaa !important;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.new-modal-input,
+.new-modal-select {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #2C2C2E;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.new-modal-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D9A404' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.input-wrapper-currency {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #2C2C2E;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.input-wrapper-currency span {
+    font-size: 1rem;
+    color: #aaa;
+    padding-right: 0.5rem;
+}
+
+.input-wrapper-currency input {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+}
+
+.form-group-flex {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group-flex .form-group {
+    flex: 1;
+}
+
+.form-group-division-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.new-modal-select-simple {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.division-container {
+    max-height: 150px;
+    overflow-y: auto;
+    background: #2C2C2E;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+}
+
+.member-checkbox-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #444;
+}
+
+.member-checkbox-item:last-child {
+    border: none;
+}
+
+.member-avatar-small {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #555;
+    margin-right: 10px;
+}
+
+.member-checkbox-item span {
+    flex-grow: 1;
+    color: #fff;
+}
+
+.member-checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+.new-modal-button-fake {
+    width: 100%;
+    text-align: center;
+    background: #2C2C2E;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 1rem;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.new-modal-button-fake i {
+    color: var(--color-primary);
+    margin-right: 0.5rem;
 }

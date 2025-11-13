@@ -108,6 +108,9 @@
     padding: 42px 32px 10px 42px;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .sidebar.closed+.main-content-wrapper {

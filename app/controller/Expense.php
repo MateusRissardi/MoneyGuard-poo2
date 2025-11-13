@@ -28,14 +28,20 @@ class ExpenseController
         }
 
         $id_grupo = $_POST['id_grupo'];
-        $valor_total = $_POST['valor_total'];
+        $id_pagador = $_POST['id_pagador'];
+        $valor_total_str = str_replace('.', '', $_POST['valor_total']);
+        $valor_total = (float) str_replace(',', '.', $valor_total_str);
+        
         $categoria = $_POST['categoria'];
+        $descricao = $_POST['descricao'];
+
         $data_despesa = $_POST['data_despesa'];
         $tipo_divisao = $_POST['tipo_divisao'] ?? 'equitativa';
 
         $url_recibo = $this->handleFileUpload();
-        if (is_string($url_recibo) && str_starts_with($url_recibo, "Erro:")) {
-            header("Location: ../group/view/$id_grupo?error=" . urlencode($url_recibo));
+        
+        if (empty($id_pagador) || empty($valor_total) || empty($categoria) || empty($data_despesa) || $valor_total <= 0 || empty($descricao)) {
+            header("Location: ../group/view/$id_grupo?error=validation"); 
             exit;
         }
 
@@ -45,8 +51,8 @@ class ExpenseController
             exit;
         }
 
-        if (empty($valor_total) || empty($categoria) || empty($data_despesa) || $valor_total <= 0) {
-            header("Location: ../group/view/$id_grupo?error=validation"); // (RN-ORG01, 07, 03)
+        if (empty($id_pagador) || empty($valor_total) || empty($categoria) || empty($data_despesa) || $valor_total <= 0) {
+            header("Location: ../group/view/$id_grupo?error=validation");
             exit;
         }
 
@@ -57,6 +63,7 @@ class ExpenseController
 
         $membros = $groupModel->getMembersByGroup($id_grupo);
         $divisao = [];
+        $ids_membros_selecionados = [];
 
         if ($tipo_divisao == 'manual') {
             $divisao_manual = $_POST['divisao_manual'] ?? [];
@@ -86,31 +93,39 @@ class ExpenseController
                 exit;
             }
 
-            if (empty($divisao)) {
+        } else {
+            $ids_membros_selecionados = $_POST['divisao_equitativa'] ?? [];
+
+            if (empty($ids_membros_selecionados)) {
                 header("Location: ../group/view/$id_grupo?error=" . urlencode("A despesa deve ter pelo menos um participante. (RN-ORG09)"));
                 exit;
             }
 
-        } else {
-            $num_membros = count($membros);
+            $num_membros = count($ids_membros_selecionados);
             $valor_por_membro = round($valor_total / $num_membros, 2);
 
-            foreach ($membros as $membro) {
+            foreach ($ids_membros_selecionados as $id_membro) {
                 $divisao[] = [
-                    'id_participante' => $membro['id_usuario'],
+                    'id_participante' => $id_membro,
                     'valor_devido' => $valor_por_membro
                 ];
             }
         }
 
+        if (empty($divisao)) {
+            header("Location: ../group/view/$id_grupo?error=" . urlencode("A despesa deve ter pelo menos um participante. (RN-ORG09)"));
+            exit;
+        }
+
         $expenseModel = new Expense($this->db);
         $result = $expenseModel->create(
             $id_grupo,
-            $this->user_id,
+            $id_pagador,
             $valor_total,
             $categoria,
             $data_despesa,
             $divisao,
+            $descricao,
             $url_recibo,
             $tipo_divisao
         );
@@ -122,6 +137,7 @@ class ExpenseController
         }
         exit;
     }
+
     public function edit($id_despesa)
     {
         $expenseModel = new Expense($this->db);

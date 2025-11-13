@@ -1,6 +1,12 @@
+.cards-wrapper {
+    display: flex;
+    gap: 90px;
+    margin-top: 20px;
+}
+
 .card-options {
     flex: 1;
-    padding: 20px;
+    padding: 30px 50px;
     border: 1px solid #444 !important;
     text-align: center;
     background: rgba(255, 255, 255, 0.07);
@@ -8,4 +14,13 @@
     border-radius: 20px;
     outline: 1px white solid;
     backdrop-filter: blur(7.58px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px
+}
+
+.new-transaction:has(button:disabled) .bi {
+    color: var(--color-text-secondary);
 }

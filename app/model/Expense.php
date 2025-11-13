@@ -9,7 +9,7 @@ class Expense
         $this->conn = $db;
     }
 
-    public function create($id_grupo, $id_pagador, $valor_total, $categoria, $data_despesa, $divisao, $url_recibo = null, $tipo_divisao = 'equitativa')
+    public function create($id_grupo, $id_pagador, $valor_total, $categoria, $data_despesa, $descricao, $divisao, $url_recibo = null, $tipo_divisao = 'equitativa')
     {
 
         $this->conn->beginTransaction();
@@ -25,6 +25,7 @@ class Expense
                 'valor' => $valor_total,
                 'cat' => $categoria,
                 'data_desp' => $data_despesa,
+                'descricao' => $descricao,
                 'tipo' => $tipo_divisao,
                 'url_recibo' => $url_recibo
             ]);
@@ -51,6 +52,7 @@ class Expense
             return false;
         }
     }
+
     public function getBalance($id_grupo)
     {
 
