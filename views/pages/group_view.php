@@ -27,8 +27,6 @@ function getCategoryIcon($categoria)
 }
 ?>
 
-<!-- <h3>Painel do Grupo: <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3> -->
-
 <?php if ($is_empty_state): ?>
     <p>Bem-vindo ao seu novo grupo! Para começar, adicione as pessoas com quem você vai dividir as contas.</p>
 
@@ -38,17 +36,18 @@ function getCategoryIcon($categoria)
                 <div class="content-icon">
                     <i class="bi bi-person-plus-fill"></i>
                 </div>
-                <p>Comece convidando pessoas</h3>
+                <p>Comece convidando pessoas</p>
                 <p class="caption">Adicione membros para poder dividir as despesas com eles.</p>
 
                 <?php if (!empty($grupo['codigo_convite'])): ?>
-                    <b style="font-family: monospace;"><?php echo htmlspecialchars($grupo['codigo_convite']); ?></b>
+                    <b id="empty-state-code"
+                        style="font-family: monospace;"><?php echo htmlspecialchars($grupo['codigo_convite']); ?></b>
                 <?php endif; ?>
 
-                <form action="../../group/generate_code/<?php echo $grupo['id_grupo']; ?>" method="POST"
-                    style="margin-top: 5px;">
-                    <button type="submit" class="btn btn-primary">Gerar código</button>
-                </form>
+                <button type="button" class="btn btn-primary" style="margin-top: 5px;"
+                    onclick="fetchInviteCode('<?php echo $grupo['id_grupo']; ?>')">
+                    Gerar código
+                </button>
             </div>
         <?php endif; ?>
 
@@ -395,7 +394,7 @@ function getCategoryIcon($categoria)
                 <div class="form-group d-flex gap-3 mb-3">
                     <div class="form-group input-wrapper liquid-glass">
                         <i class="fa fa-key input-icon"></i>
-                         <input type="date" name="data_pagameno" value="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" name="data_pagameno" value="<?php echo date('Y-m-d'); ?>" required>
                     </div>
                 </div>
 
@@ -431,9 +430,11 @@ function getCategoryIcon($categoria)
 
                     <p style="margin-bottom: 5px !important; font-weight: bold;">Código de
                         Convite:<?php echo htmlspecialchars($grupo['codigo_convite']); ?></p>
-                    <form action="group/generate_code/<?php echo $grupo['id_grupo']; ?>" method="POST" style="display: inline;">
-                        <button type="submit" class="btn btn-primary w-100">Gerar Novo Código</button>
-                    </form>
+
+                    <button type="button" class="btn btn-primary"
+                        onclick="fetchInviteCode('<?php echo $grupo['id_grupo']; ?>')">
+                        Gerar Novo Código (HU008)
+                    </button>
 
                     <hr style="border-color: #555; margin: 15px 0;">
 
@@ -461,48 +462,119 @@ function getCategoryIcon($categoria)
                             style="background: #E84545 !important; border-color: #E84545 !important">Excluir Grupo</button>
                     </form>
 
+                    <hr style="border-color: #555; margin: 15px 0;">
+                    <h4>Adicionar Membro (HU006)</h4>
+                    <form action="group/add_member" method="POST">
+                        <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
+                        <div><label>E-mail:</label> <input type="email" name="email" required></div>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </form>
+
                 </div>
             <?php endif; ?>
         </div>
     </div>
-
-    <script>
-        function openModal(modalId) {
-            closeModal('modal-add-expense');
-            closeModal('modal-add-settlement');
-            closeModal('modal-manage-members');
-
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('visible');
-            }
-        }
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('visible');
-            }
-        }
-        window.onclick = function (event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                if (event.target.id !== 'noGroupsModal') {
-                    event.target.classList.remove('visible');
-                }
-            }
-        }
-
-        function toggleDivisao(tipo) {
-            if (tipo === 'manual') {
-                document.getElementById('div_manual_inputs').style.display = 'block';
-                document.getElementById('div_equitativa_inputs').style.display = 'none';
-            } else {
-                document.getElementById('div_manual_inputs').style.display = 'none';
-                document.getElementById('div_equitativa_inputs').style.display = 'block';
-            }
-        }
-    </script>
-
 <?php endif; ?>
+
+<div id="modal-show-code" class="modal-overlay">
+    <div class="modal-content" style="max-width: 450px;">
+        <span class="modal-close" onclick="closeModal('modal-show-code')">&times;</span>
+        <h3 style="text-align: center;">Gerar código de acesso!</h3>
+        <p style="text-align: center; color: var(--color-text-secondary);">Compartilhe o código com as pessoas
+            que você vai dividir!</p>
+
+        <div class="form-group mb-3">
+            <label>Código de Acesse </label>
+            <div class="form-group d-flex gap-3">
+                <div class="form-group input-wrapper liquid-glass">
+                    <i class="fa fa-key input-icon"></i>
+                    <input type="text" id="invite-code-display" style="margin-bottom: 0;" readonly>
+                </div>
+                <button class="btn btn-primary" onclick="copyCodeToClipboard()">Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(modalId) {
+        closeModal('modal-add-expense');
+        closeModal('modal-add-settlement');
+        closeModal('modal-manage-members');
+        closeModal('modal-show-code');
+
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('visible');
+        } else {
+            console.error("Erro: Modal não encontrado: " + modalId);
+        }
+    }
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) { // Verifica se existe antes de tentar fechar
+            modal.classList.remove('visible');
+        }
+    }
+    window.onclick = function (event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            if (event.target.id !== 'noGroupsModal') {
+                event.target.classList.remove('visible');
+            }
+        }
+    }
+
+    function toggleDivisao(tipo) {
+        if (tipo === 'manual') {
+            document.getElementById('div_manual_inputs').style.display = 'block';
+            document.getElementById('div_equitativa_inputs').style.display = 'none';
+        } else {
+            document.getElementById('div_manual_inputs').style.display = 'none';
+            document.getElementById('div_equitativa_inputs').style.display = 'block';
+        }
+    }
+
+    // Função que estava em falta (agora está disponível para o 'if' e para o 'else')
+    function fetchInviteCode(id_grupo) {
+        const displayInput = document.getElementById('invite-code-display');
+        displayInput.value = "Gerando...";
+        openModal('modal-show-code');
+
+        const BASE_URL = "/GitHub/MoneyGuard-poo2/public/";
+
+        fetch(BASE_URL + `group/generate_code/${id_grupo}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayInput.value = data.code;
+                    // Atualiza o código na página (no "estado vazio") se ele existir
+                    const codeDisplayEmpty = document.getElementById('empty-state-code');
+                    if (codeDisplayEmpty) {
+                        codeDisplayEmpty.textContent = data.code;
+                    }
+                } else {
+                    displayInput.value = "Erro ao gerar";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                displayInput.value = "Erro de conexão";
+            });
+    }
+
+    // Função que estava em falta
+    function copyCodeToClipboard() {
+        const displayInput = document.getElementById('invite-code-display');
+        displayInput.select();
+        navigator.clipboard.writeText(displayInput.value).then(() => {
+            alert("Código copiado: " + displayInput.value);
+        }).catch(err => {
+            alert("Falha ao copiar. Tente manualmente.");
+        });
+    }
+</script>
 
 
 <?php

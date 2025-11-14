@@ -179,20 +179,19 @@ class GroupController
         $grupo = $groupModel->getGroupById($id_grupo);
 
         if ($grupo['id_admin'] != $this->user_id) {
-            header("Location: ../../group/view/$id_grupo?error=not_admin_code");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'Not admin']);
             exit;
         }
 
         $novo_codigo = $groupModel->generateInviteCode($id_grupo);
 
-        header_remove("Pragma");
-        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
-
+        header('Content-Type: application/json');
 
         if ($novo_codigo) {
-            header("Location: group/view/$id_grupo?status=code_generated&code=" . $novo_codigo);
+            echo json_encode(['success' => true, 'code' => $novo_codigo]);
         } else {
-            header("Location: group/view/$id_grupo?error=code_failed");
+            echo json_encode(['success' => false, 'error' => 'Code generation failed']);
         }
         exit;
     }
