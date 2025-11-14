@@ -6,8 +6,8 @@ require_once '../views/components/header.php';
     <a href="../group/view/<?php echo $grupo['id_grupo']; ?>">&laquo; Voltar para o Grupo</a>
 </nav>
 
-<h2>Relatórios de Gastos (CDU08)</h2>
-<h3><?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3>
+<!-- <h2>Relatórios de Gastos (CDU08)</h2> -->
+<!-- <h3><?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3> -->
 
 <div style="display: flex; gap: 20px; margin-top: 20px;">
 

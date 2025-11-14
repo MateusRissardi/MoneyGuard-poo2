@@ -72,5 +72,23 @@ class User
         }
         return false;
     }
+
+    public function setLastAccessedGroup($id_usuario, $id_grupo)
+    {
+        try {
+            $query = 'UPDATE "User" SET ultimo_grupo_acessado_id = :id_grupo 
+                      WHERE id_usuario = :id_usuario';
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([
+                'id_grupo' => $id_grupo,
+                'id_usuario' => $id_usuario
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erro ao salvar último grupo: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

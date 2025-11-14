@@ -32,6 +32,9 @@ class SettlementController
         $data_pagamento = $_POST['data_pagamento'];
         $id_devedor = $this->user_id;
 
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+
         if (empty($id_credor) || empty($valor) || empty($data_pagamento) || $valor <= 0) {
             header("Location: ../group/view/$id_grupo?error=settlement_validation");
             exit;
@@ -62,6 +65,9 @@ class SettlementController
 
         $id_acerto = $_POST['id_acerto'];
         $id_grupo = $_POST['id_grupo'];
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         if (empty($id_acerto) || empty($id_grupo)) {
             header("Location: ../group/view/$id_grupo?error=delete_invalid");

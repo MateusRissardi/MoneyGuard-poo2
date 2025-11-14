@@ -243,7 +243,6 @@ class Group
             return "Erro ao atualizar o nome: " . $e->getMessage();
         }
     }
-
     public function delete($id_grupo, $id_usuario_logado)
     {
         try {
@@ -262,7 +261,6 @@ class Group
             return "Erro ao excluir o grupo: " . $e->getMessage();
         }
     }
-
     public function removeMember($id_grupo, $id_membro_remover, $id_usuario_logado)
     {
         try {

@@ -58,3 +58,5 @@ CREATE TABLE "Settlement" (
 );
 
 ALTER TABLE "Group" ADD COLUMN "codigo_data_geracao" TIMESTAMP;
+
+ALTER TABLE "User" ADD COLUMN "ultimo_grupo_acessado_id" INTEGER DEFAULT NULL;

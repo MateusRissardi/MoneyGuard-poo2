@@ -91,12 +91,13 @@
 .modal-content {
     background-color: #222;
     margin: 10% auto;
-    padding: 20px;
+    padding: 20px 30px;
     border: 1px solid #888;
     width: 90%;
     max-width: 500px;
     border-radius: 10px;
     color: #fff;
+    gap: 15px;
 }
 
 .modal-close {
@@ -118,7 +119,9 @@
 }
 
 
-#modal-add-expense .modal-content {
+#modal-add-expense .modal-content,
+#modal-manage-members .modal-content,
+#modal-add-settlement .modal-content {
     padding: 1.5rem;
     max-width: 480px;
     background: #1C1C1E;
@@ -139,7 +142,9 @@
     color: var(--color-primary);
 }
 
-#modal-add-expense label {
+#modal-add-expense label,
+#modal-manage-members label,
+#modal-add-settlement label{
     color: #aaa !important;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;

@@ -27,7 +27,7 @@ function getCategoryIcon($categoria)
 }
 ?>
 
-<h3>Painel do Grupo: <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3>
+<!-- <h3>Painel do Grupo: <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3> -->
 
 <?php if ($is_empty_state): ?>
     <p>Bem-vindo ao seu novo grupo! Para começar, adicione as pessoas com quem você vai dividir as contas.</p>
@@ -92,26 +92,30 @@ function getCategoryIcon($categoria)
 
     <div class="summary-cards">
         <div class="card-dark">
-            <h3>Saldo total do Grupo</h3>
-            <div class="value">R$ 0,00</div>
-            <small>(Balanço sempre zero)</small>
+            <h3>Total de Transações</h3>
+            <div class="value" style="color: var(--color-primary)"><?php echo count($despesas) + count($acertos); ?></div>
+            <small style="color: var(--color-text-secondary)">(Despesas + Acertos Registrados)</small>
         </div>
         <div class="card-dark">
             <h3>Seu Saldo Pessoal</h3>
             <div class="value <?php echo $meu_saldo_pessoal >= 0 ? 'positive' : 'negative'; ?>">
                 <?php if ($meu_saldo_pessoal > 0.01): ?>
-                    Você recebe R$ <?php echo number_format($meu_saldo_pessoal, 2, ',', '.'); ?>
+                    R$ <?php echo number_format($meu_saldo_pessoal, 2, ',', '.'); ?>
                 <?php elseif ($meu_saldo_pessoal < -0.01): ?>
-                    Você deve R$ <?php echo number_format(abs($meu_saldo_pessoal), 2, ',', '.'); ?>
+                    - R$ <?php echo number_format(abs($meu_saldo_pessoal), 2, ',', '.'); ?>
                 <?php else: ?>
                     R$ 0,00
                 <?php endif; ?>
             </div>
+            <small style="color: var(--color-text-secondary)">Quanto você deve receber (+)/Quanto você deve(-)</small>
+
         </div>
         <div class="card-dark">
             <h3>Total gasto no Grupo</h3>
-            <div class="value">R$ <?php echo number_format($total_gasto_real, 2, ',', '.'); ?></div>
-            <small>(Soma de despesas e acertos)</small>
+            <div class="value" style="color: var(--color-primary)">R$
+                <?php echo number_format($total_gasto_real, 2, ',', '.'); ?>
+            </div>
+            <small style="color: var(--color-text-secondary)">(Soma de despesas e acertos)</small>
         </div>
     </div>
 
@@ -175,7 +179,6 @@ function getCategoryIcon($categoria)
                             <?php echo getCategoryIcon($transacao['categoria']); ?>
                         </div>
                         <div class="transaction-details">
-                            <div class="title"><?php echo htmlspecialchars($transacao['categoria']); ?></div>
                             <div class="title"><?php echo htmlspecialchars($transacao['descricao']); ?></div>
 
                             <div class="subtitle">
@@ -243,7 +246,7 @@ function getCategoryIcon($categoria)
 
                 <?php if ($grupo['id_admin'] == $meu_id && $membro['id_usuario'] != $meu_id): ?>
                     <div class="member-options">
-                        <form action="../../group/remove_member" method="POST" style="display: inline;"
+                        <form action="group/remove_member" method="POST" style="display: inline;"
                             onsubmit="return confirm('Tem certeza que deseja remover <?php echo htmlspecialchars($membro['nome']); ?>? (MSG32)');">
                             <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
                             <input type="hidden" name="id_membro" value="<?php echo $membro['id_usuario']; ?>">
@@ -268,7 +271,7 @@ function getCategoryIcon($categoria)
                 <div class="alert alert-error"><?php echo htmlspecialchars(urldecode($_GET['error'])); ?></div>
             <?php endif; ?>
 
-            <form action="../../expense/create" method="POST" enctype="multipart/form-data">
+            <form action="expense/create" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
 
                 <div class="form-group">
@@ -283,11 +286,11 @@ function getCategoryIcon($categoria)
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Finalidade:</label>
+                <div class="form-group mb-3">
+                    <label>Finalidade (Descrição):</label>
                     <div class="form-group input-wrapper liquid-glass">
                         <i class="fa fa-key input-icon"></i>
-                        <input type="text" name="categoria" placeholder="Ex: Airbnb, Jantar, etc." class="" required>
+                        <input type="text" name="descricao" placeholder="Ex: Airbnb, Jantar, etc." class="" required>
                     </div>
                 </div>
 
@@ -303,7 +306,7 @@ function getCategoryIcon($categoria)
                         <option value="Outros">💰 Outros</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label>Valor:</label>
                     <div class="form-group input-wrapper liquid-glass">
                         <i class="fa fa-key input-icon"></i>
@@ -365,13 +368,13 @@ function getCategoryIcon($categoria)
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('modal-add-settlement')">&times;</span>
 
-            <h3>Registrar Acerto de Contas (CDU05)</h3>
+            <h3>Registrar Acerto de Contas</h3>
             <p>Eu paguei para...</p>
-            <form action="../../settlement/create" method="POST">
+            <form action="settlement/create" method="POST">
                 <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
 
                 <label>Quem recebeu?</label>
-                <select name="id_credor" required>
+                <select name="id_credor" class="new-modal-select" required>
                     <option value="">-- Selecione um membro --</option>
                     <?php foreach ($membros as $membro):
                         if ($membro['id_usuario'] != $meu_id): ?>
@@ -380,13 +383,23 @@ function getCategoryIcon($categoria)
                         <?php endif; endforeach; ?>
                 </select>
 
-                <label>Valor:</label>
-                <input type="number" step="0.01" name="valor" required>
+                <label>Valor: </label>
+                <div class="form-group d-flex gap-3 mb-3">
+                    <div class="form-group input-wrapper liquid-glass">
+                        <i class="fa fa-key input-icon"></i>
+                        <input type="number" step="0.01" name="valor" required>
+                    </div>
+                </div>
 
                 <label>Data do Pagamento:</label>
-                <input type="date" name="data_pagamento" value="<?php echo date('Y-m-d'); ?>" required>
+                <div class="form-group d-flex gap-3 mb-3">
+                    <div class="form-group input-wrapper liquid-glass">
+                        <i class="fa fa-key input-icon"></i>
+                         <input type="date" name="data_pagameno" value="<?php echo date('Y-m-d'); ?>" required>
+                    </div>
+                </div>
 
-                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Registrar Acerto (HU014)</button>
+                <button type="submit" class="btn btn-primary w-100">Registrar Acerto</button>
             </form>
         </div>
     </div>
@@ -396,53 +409,58 @@ function getCategoryIcon($categoria)
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('modal-manage-members')">&times;</span>
 
-            <h3>Gerenciar Grupo e Membros</h3>
-
-            <h4>Membros (CDU10)</h4>
-            <ul>
+            <h4>Gerenciar Grupo e Membros</h4>
+            <div>
                 <?php foreach ($membros as $membro): ?>
-                    <li>
-                        <?php echo htmlspecialchars($membro['nome']); ?>
-                        <?php if ($membro['id_usuario'] == $grupo['id_admin'])
-                            echo '<b>(Admin)</b>'; ?>
-                    </li>
+                    <div class="d-flex gap-3">
+                        <i style="font-size: 16px; color: var(--color-primary)" class="bi bi-person-fill p-0"></i>
+                        <p>
+                            <?php echo htmlspecialchars($membro['nome']); ?>
+                            <?php if ($membro['id_usuario'] == $grupo['id_admin'])
+                                echo '<b>(Admin)</b>'; ?>
+                        </p>
+                    </div>
                 <?php endforeach; ?>
-            </ul>
+            </div>
+
+            <hr>
 
             <?php if ($grupo['id_admin'] == $meu_id): ?>
-                <div style="background: #333; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                <div>
                     <h4>Painel do Administrador</h4>
 
-                    <p><strong>Código de Convite (CDU11):</strong> <?php echo htmlspecialchars($grupo['codigo_convite']); ?></p>
-                    <form action="../../group/generate_code/<?php echo $grupo['id_grupo']; ?>" method="POST"
-                        style="display: inline;">
-                        <button type="submit" class="btn btn-primary">Gerar Novo Código (HU008)</button>
+                    <p style="margin-bottom: 5px !important; font-weight: bold;">Código de
+                        Convite:<?php echo htmlspecialchars($grupo['codigo_convite']); ?></p>
+                    <form action="group/generate_code/<?php echo $grupo['id_grupo']; ?>" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-primary w-100">Gerar Novo Código</button>
                     </form>
 
                     <hr style="border-color: #555; margin: 15px 0;">
 
-                    <form action="../../group/update" method="POST" style="display: inline-block;">
+                    <form action="group/update" method="POST" style="display: inline-block; margin-bottom: 0.5rem;"
+                        class="w-100">
                         <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-                        <label>Editar Nome:</label>
-                        <input type="text" name="nome_grupo" value="<?php echo htmlspecialchars($grupo['nome_grupo']); ?>"
-                            required>
-                        <button type="submit" class="btn btn-primary">Atualizar (HU004)</button>
+                        <label>Editar nome: </label>
+                        <div class="form-group d-flex gap-3">
+                            <div class="form-group input-wrapper liquid-glass">
+                                <i class="fa fa-key input-icon"></i>
+                                <input type="text" name="nome_grupo"
+                                    value="<?php echo htmlspecialchars($grupo['nome_grupo']); ?>" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Atualizar</button>
+                        </div>
                     </form>
 
-                    <form action="../../group/delete" method="POST" style="display: inline-block;"
-                        onsubmit="return confirm('Tem certeza que deseja excluir este grupo? (MSG23)');">
+                    <hr>
+
+                    <form action="group/delete" method="POST" style="display: inline-block;" class="w-100"
+                        onsubmit="return confirm('Tem certeza que deseja excluir este grupo?');">
                         <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-                        <button type="submit" class="btn btn-primary" style="background: #E84545 !important;">Excluir Grupo
-                            (HU005)</button>
+                        <label>Excluir grupo: </label>
+                        <button type="submit" class="btn btn-primary w-100"
+                            style="background: #E84545 !important; border-color: #E84545 !important">Excluir Grupo</button>
                     </form>
 
-                    <hr style="border-color: #555; margin: 15px 0;">
-                    <h4>Adicionar Membro (HU006)</h4>
-                    <form action="../../group/add_member" method="POST">
-                        <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-                        <div><label>E-mail:</label> <input type="email" name="email" required></div>
-                        <button type="submit" class="btn btn-primary">Adicionar</button>
-                    </form>
                 </div>
             <?php endif; ?>
         </div>
@@ -450,28 +468,21 @@ function getCategoryIcon($categoria)
 
     <script>
         function openModal(modalId) {
-            // Fecha todos os modais (mas verifica se existem primeiro)
             closeModal('modal-add-expense');
             closeModal('modal-add-settlement');
             closeModal('modal-manage-members');
 
-            // Abre o modal clicado
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.add('visible');
-            } else {
-                console.error("Erro: Tentou abrir um modal que não existe: " + modalId);
             }
         }
-
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
-            // SÓ tenta fechar se o modal for encontrado
             if (modal) {
                 modal.classList.remove('visible');
             }
         }
-
         window.onclick = function (event) {
             if (event.target.classList.contains('modal-overlay')) {
                 if (event.target.id !== 'noGroupsModal') {
@@ -483,8 +494,10 @@ function getCategoryIcon($categoria)
         function toggleDivisao(tipo) {
             if (tipo === 'manual') {
                 document.getElementById('div_manual_inputs').style.display = 'block';
+                document.getElementById('div_equitativa_inputs').style.display = 'none';
             } else {
                 document.getElementById('div_manual_inputs').style.display = 'none';
+                document.getElementById('div_equitativa_inputs').style.display = 'block';
             }
         }
     </script>

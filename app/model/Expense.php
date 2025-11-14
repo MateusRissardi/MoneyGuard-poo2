@@ -14,8 +14,8 @@ class Expense
 
         $this->conn->beginTransaction();
         try {
-            $query_exp = 'INSERT INTO "Expense" (id_grupo, id_pagador, valor_total, categoria, data_despesa, tipo_divisao, url_recibo)
-                          VALUES (:id_grupo, :id_pagador, :valor, :cat, :data_desp, :tipo, :url_recibo)
+            $query_exp = 'INSERT INTO "Expense" (id_grupo, id_pagador, valor_total, categoria, data_despesa, descricao, tipo_divisao, url_recibo)
+                          VALUES (:id_grupo, :id_pagador, :valor, :cat, :data_desp, :descricao, :tipo, :url_recibo)
                           RETURNING id_despesa';
 
             $stmt_exp = $this->conn->prepare($query_exp);
@@ -52,16 +52,13 @@ class Expense
             return false;
         }
     }
-
     public function getBalance($id_grupo)
     {
-
         $query = '
             SELECT
                 u.id_usuario,
                 u.nome,
                 
-                -- CRÉDITOS (Quanto dinheiro "entrou" / paguei por outros)
                 (
                     (SELECT COALESCE(SUM(valor_total), 0) 
                      FROM "Expense" 
@@ -69,10 +66,9 @@ class Expense
                      +
                     (SELECT COALESCE(SUM(valor), 0)
                      FROM "Settlement"
-                     WHERE id_credor = u.id_usuario AND id_grupo = :id_grupo_b)
-                ) AS total_credito,
+                     WHERE id_devedor = u.id_usuario AND id_grupo = :id_grupo_b)
+                ) AS total_pago,
                  
-                -- DÉBITOS (Quanto dinheiro "saiu" / outros pagaram por mim)
                 (
                     (SELECT COALESCE(SUM(es.valor_devido), 0) 
                      FROM "ExpenseSplit" es
@@ -81,8 +77,8 @@ class Expense
                      +
                     (SELECT COALESCE(SUM(valor), 0)
                      FROM "Settlement"
-                     WHERE id_devedor = u.id_usuario AND id_grupo = :id_grupo_d)
-                ) AS total_debito
+                     WHERE id_credor = u.id_usuario AND id_grupo = :id_grupo_d)
+                ) AS total_consumido
             
             FROM "User" u
             JOIN "GroupMember" gm ON u.id_usuario = gm.id_usuario
@@ -100,8 +96,16 @@ class Expense
         ];
 
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        
+        $saldos = $stmt->fetchAll();
+        foreach ($saldos as &$saldo) {
+            $saldo['total_credito'] = $saldo['total_pago'];
+            $saldo['total_debito'] = $saldo['total_consumido'];
+        }
+        
+        return $saldos;
     }
+
     public function getExpenseById($id_despesa)
     {
         $query = 'SELECT * FROM "Expense" WHERE id_despesa = :id_despesa';

@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+define('BASE_URL', '/GitHub/MoneyGuard-poo2/public/');
+
 require_once '../app/core/Database.php';
 require_once '../app/controller/User.php';
 require_once '../app/controller/Group.php';
@@ -26,11 +28,11 @@ switch (true) {
         break;
 
     case ($url == 'dashboard'):
-        require_once '../views/pages/dashboard.php';
+        $controller =new GroupController();
+        $controller->index();
         break;
 
     case ($url == 'groups'):
-        // Esta rota agora carrega sua nova página de lista de grupos
         require_once '../views/pages/groups_list.php';
         break;
         

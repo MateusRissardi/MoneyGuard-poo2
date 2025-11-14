@@ -20,9 +20,7 @@ try {
     // Busca os grupos do usuário logado
     $sidebar_grupos = $groupModel_sidebar->getGroupsByUser($_SESSION['user_id']);
 } catch (PDOException $e) {
-    // Em caso de erro, define como array vazio para não quebrar o layout
     $sidebar_grupos = []; 
-    // Opcional: logar o erro
     error_log("Erro ao buscar grupos para o sidebar: " . $e->getMessage());
 }
 ?>
@@ -34,7 +32,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoneyGuard</title>
-    <base href="/MoneyGuard-poo2/public/">
+    <base href="/GitHub/MoneyGuard-poo2/public/">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -48,10 +46,24 @@ try {
     <div class="main-content-wrapper">
 
         <header>
-            <h2 style="color: var(--color-primary) !important">MoneyGuard</h2>
+            <?php if (isset($grupo) && is_array($grupo)): ?>
+                <h3 style="color: var(--color-text) !important">Painel do Grupo: <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3>
+            <?php else: ?>
+                <h2 style="color: var(--color-primary) !important">MoneyGuard</h2>
+            <?php endif; ?>
+            
             <nav>
                 <h5 style="font-weight: normal;">Olá, <?php echo htmlspecialchars($user_name); ?>!</h5>
             </nav>
         </header>
+
+        <script>
+            console.log("--- DEBUG DO HEADER ---");
+            // Este log mostra o que o PHP viu QUANDO A PÁGINA CARREGOU
+            console.log("Variável $grupo está definida? <?php echo isset($grupo) && is_array($grupo) ? 'Sim' : 'Não'; ?>");
+            console.log("Nome do Grupo (se definido): <?php echo isset($grupo) ? htmlspecialchars($grupo['nome_grupo']) : 'N/A'; ?>");
+            console.log("URL Atual: <?php echo htmlspecialchars($_GET['url'] ?? 'dashboard'); ?>");
+            console.log("--- FIM DO DEBUG ---");
+        </script>
         <hr>
-        <main></main>
+        <main>

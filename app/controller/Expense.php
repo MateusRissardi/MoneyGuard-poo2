@@ -23,7 +23,7 @@ class ExpenseController
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            header("Location: ../dashboard");
+            header("Location: " . BASE_URL . "dashboard");
             exit;
         }
 
@@ -31,7 +31,7 @@ class ExpenseController
         $id_pagador = $_POST['id_pagador'];
         $valor_total_str = str_replace('.', '', $_POST['valor_total']);
         $valor_total = (float) str_replace(',', '.', $valor_total_str);
-        
+
         $categoria = $_POST['categoria'];
         $descricao = $_POST['descricao'];
 
@@ -39,9 +39,12 @@ class ExpenseController
         $tipo_divisao = $_POST['tipo_divisao'] ?? 'equitativa';
 
         $url_recibo = $this->handleFileUpload();
-        
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+
         if (empty($id_pagador) || empty($valor_total) || empty($categoria) || empty($data_despesa) || $valor_total <= 0 || empty($descricao)) {
-            header("Location: ../group/view/$id_grupo?error=validation"); 
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=validation"); // CORRIGIDO
             exit;
         }
 
@@ -51,13 +54,8 @@ class ExpenseController
             exit;
         }
 
-        if (empty($id_pagador) || empty($valor_total) || empty($categoria) || empty($data_despesa) || $valor_total <= 0) {
-            header("Location: ../group/view/$id_grupo?error=validation");
-            exit;
-        }
-
         if (strlen($categoria) > 50) {
-            header("Location: ../group/view/$id_grupo?error=" . urlencode("Categoria deve ter no máximo 50 caracteres. (RN-ORG04)"));
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("Categoria deve ter no máximo 50 caracteres. (RN-ORG04)")); // CORRIGIDO
             exit;
         }
 
@@ -124,16 +122,16 @@ class ExpenseController
             $valor_total,
             $categoria,
             $data_despesa,
-            $divisao,
             $descricao,
+            $divisao,
             $url_recibo,
             $tipo_divisao
         );
 
         if ($result) {
-            header("Location: ../group/view/$id_grupo?status=expense_added");
+            header("Location: " . BASE_URL . "group/view/$id_grupo?status=expense_added"); // CORRIGIDO
         } else {
-            header("Location: ../group/view/$id_grupo?error=create_failed");
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=create_failed"); // CORRIGIDO
         }
         exit;
     }
@@ -142,6 +140,9 @@ class ExpenseController
     {
         $expenseModel = new Expense($this->db);
         $despesa = $expenseModel->getExpenseById($id_despesa);
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         if (!$despesa || $despesa['id_pagador'] != $this->user_id) {
             header("Location: ../../dashboard?error=not_allowed_edit");
@@ -172,6 +173,9 @@ class ExpenseController
             'data_despesa' => $_POST['data_despesa'],
             'tipo_divisao' => $tipo_divisao
         ];
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         $url_recibo = $this->handleFileUpload();
         if (is_string($url_recibo) && str_starts_with($url_recibo, "Erro:")) {

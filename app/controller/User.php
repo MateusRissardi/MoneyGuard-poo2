@@ -30,6 +30,7 @@ class UserController
                 $_SESSION['user_id'] = $result['id_usuario'];
                 $_SESSION['user_name'] = $result['nome'];
                 $_SESSION['user_email'] = $result['email'];
+                $_SESSION['ultimo_grupo_acessado_id'] = $result['ultimo_grupo_acessado_id'];
 
                 header("Location: dashboard");
                 exit;
@@ -54,7 +55,8 @@ class UserController
     }
 
     // Método para o CDU01 (Cadastro)
-    public function register(){
+    public function register()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $nome = $_POST['nome'];

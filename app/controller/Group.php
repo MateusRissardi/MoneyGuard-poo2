@@ -28,8 +28,21 @@ class GroupController
         if (empty($grupos)) {
             require_once '../views/pages/dashboard.php';
         } else {
-            $primeiro_grupo_id = $grupos[0]['id_grupo'];
-            header("Location: group/view/" . $primeiro_grupo_id);
+            $target_grupo_id = null;
+
+            if (isset($_SESSION['ultimo_grupo_acessado_id'])) {
+                $ultimo_id = $_SESSION['ultimo_grupo_acessado_id'];
+
+                if ($groupModel->isUserMember($ultimo_id, $this->user_id)) {
+                    $target_grupo_id = $ultimo_id;
+                }
+            }
+
+            if ($target_grupo_id === null) {
+                $target_grupo_id = $grupos[0]['id_grupo'];
+            }
+
+            header("Location: group/view/" . $target_grupo_id);
             exit;
         }
     }
@@ -70,6 +83,10 @@ class GroupController
             exit;
         }
 
+        $userModel = new User($this->db);
+        $userModel->setLastAccessedGroup($this->user_id, $id_grupo);
+        $_SESSION['ultimo_grupo_acessado_id'] = $id_grupo;
+
         $filtros = [
             'categoria' => $_GET['filtro_categoria'] ?? null,
             'id_pagador' => $_GET['filtro_pagador'] ?? null
@@ -105,6 +122,9 @@ class GroupController
 
         $groupModel = new Group($this->db);
         $grupo = $groupModel->getGroupById($id_grupo);
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         if ($grupo['id_admin'] != $this->user_id) {
             header("Location: ../group/view/$id_grupo?error=not_admin");
@@ -165,10 +185,14 @@ class GroupController
 
         $novo_codigo = $groupModel->generateInviteCode($id_grupo);
 
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+
+
         if ($novo_codigo) {
-            header("Location: ../../group/view/$id_grupo?status=code_generated&code=" . $novo_codigo);
+            header("Location: group/view/$id_grupo?status=code_generated&code=" . $novo_codigo);
         } else {
-            header("Location: ../../group/view/$id_grupo?error=code_failed");
+            header("Location: group/view/$id_grupo?error=code_failed");
         }
         exit;
     }
@@ -199,6 +223,9 @@ class GroupController
 
         $id_grupo = $_POST['id_grupo'];
         $novo_nome = $_POST['nome_grupo'];
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         // Validação (HU-E02)
         if (empty($novo_nome)) {
@@ -248,6 +275,9 @@ class GroupController
 
         $groupModel = new Group($this->db);
         $result = $groupModel->removeMember($id_grupo, $id_membro_remover, $this->user_id);
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         if ($result === true) {
             header("Location: ../group/view/$id_grupo?status=member_removed");
