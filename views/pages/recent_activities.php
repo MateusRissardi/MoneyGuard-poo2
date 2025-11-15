@@ -69,7 +69,10 @@ $mes_atual = '';
             ?>
 
             <?php if ($atividade['tipo'] == 'despesa'): $item = $atividade['dados']; ?>
-                <div class="transaction-item">
+                <a href="group/view/<?php echo $grupo['id_grupo']; ?>#edit-<?php echo $item['id_despesa']; ?>"
+                    title="Clique para ver ou editar esta despesa" class="transaction-item"
+                    style="text-decoration: none !important; cursor: pointer;">
+
                     <div class="transaction-icon">
                         <?php echo getCategoryIcon($item['categoria']); ?>
                     </div>
@@ -83,42 +86,42 @@ $mes_atual = '';
                     <div class="transaction-amount">
                         <div class="total">R$ <?php echo number_format($item['valor_total'], 2, ',', '.'); ?></div>
                     </div>
-                </div>
+            </div>
 
-            <?php elseif ($atividade['tipo'] == 'acerto'): $item = $atividade['dados']; ?>
-                <div class="transaction-item">
-                    <div class="transaction-icon" style="background: #2EBD85;">
-                        <?php echo '💸'; ?>
-                    </div>
-                    <div class="transaction-details">
-                        <div class="title">Acerto de Contas</div>
-                        <div class="subtitle">
-                            <?php echo htmlspecialchars($item['nome_devedor']); ?>
-                            pagou para
-                            <?php echo htmlspecialchars($item['nome_credor']); ?>
-                            em <?php echo date('d \d\e M', strtotime($item['data_pagamento'])); ?>
-                        </div>
-                    </div>
-                    <div class="transaction-amount">
-                        <div class="total">R$ <?php echo number_format($item['valor'], 2, ',', '.'); ?></div>
+        <?php elseif ($atividade['tipo'] == 'acerto'): $item = $atividade['dados']; ?>
+            <div class="transaction-item">
+                <div class="transaction-icon" style="background: #2EBD85;">
+                    <?php echo '💸'; ?>
+                </div>
+                <div class="transaction-details">
+                    <div class="title">Acerto de Contas</div>
+                    <div class="subtitle">
+                        <?php echo htmlspecialchars($item['nome_devedor']); ?>
+                        pagou para
+                        <?php echo htmlspecialchars($item['nome_credor']); ?>
+                        em <?php echo date('d \d\e M', strtotime($item['data_pagamento'])); ?>
                     </div>
                 </div>
+                <div class="transaction-amount">
+                    <div class="total">R$ <?php echo number_format($item['valor'], 2, ',', '.'); ?></div>
+                </div>
+            </div>
 
-            <?php elseif ($atividade['tipo'] == 'entrada'):
+        <?php elseif ($atividade['tipo'] == 'entrada'):
                 $item = $atividade['dados']; ?>
-                <div class="transaction-item">
-                    <div class="member-avatar" style="width: 45px; height: 45px; margin-right: 15px;"></div>
-                    <div class="transaction-details">
-                        <div class="title"><?php echo htmlspecialchars($item['nome']); ?> entrou no grupo</div>
-                        <div class="subtitle">
-                            em <?php echo date('d \d\e M, H:i', strtotime($item['data_entrada'])); ?>
-                        </div>
+            <div class="transaction-item">
+                <div class="member-avatar" style="width: 45px; height: 45px; margin-right: 15px;"></div>
+                <div class="transaction-details">
+                    <div class="title"><?php echo htmlspecialchars($item['nome']); ?> entrou no grupo</div>
+                    <div class="subtitle">
+                        em <?php echo date('d \d\e M, H:i', strtotime($item['data_entrada'])); ?>
                     </div>
                 </div>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-        <?php endforeach; ?>
-    <?php endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 </div>
 
 

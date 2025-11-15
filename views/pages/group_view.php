@@ -131,8 +131,7 @@ function getCategoryIcon($categoria)
                         title="Você não está devendo nada.">Registrar Acerto</a>
                 <?php endif; ?>
 
-                <a href="#" class="btn-add" onclick="openModal('modal-add-expense'); return false;"
-                    style="margin-left: 10px;">+
+                <a href="#" class="btn-add" onclick="openCreateModal(); return false;" style="margin-left: 10px;">+
                     Adicionar despesa</a>
             </div>
         </div>
@@ -173,7 +172,7 @@ function getCategoryIcon($categoria)
                 ?>
 
                 <?php if ($transacao['tipo'] == 'despesa'): ?>
-                    <div class="transaction-item">
+                    <div class="transaction-item" style="cursor: pointer;" onclick="openEditModal(<?php echo $transacao['id_despesa']; ?>)">
                         <div class="transaction-icon">
                             <?php echo getCategoryIcon($transacao['categoria']); ?>
                         </div>
@@ -260,22 +259,22 @@ function getCategoryIcon($categoria)
         <?php endforeach; ?>
     </div>
 
-
     <div id="modal-add-expense" class="modal-overlay">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('modal-add-expense')">&times;</span>
-            <h5>Nova Despesa</h5>
+            <h5 id="expense-modal-title">Nova Despesa</h5>
 
             <?php if (isset($_GET['error'])): ?>
                 <div class="alert alert-error"><?php echo htmlspecialchars(urldecode($_GET['error'])); ?></div>
             <?php endif; ?>
 
-            <form action="expense/create" method="POST" enctype="multipart/form-data">
+            <form id="expense-form" action="expense/create" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
+                <input type="hidden" name="id_despesa" id="expense-id-despesa" value="">
 
                 <div class="form-group">
                     <label>Quem pagou</label>
-                    <select name="id_pagador" class="new-modal-select">
+                    <select name="id_pagador" id="expense-id-pagador" class="new-modal-select">
                         <?php foreach ($membros as $membro): ?>
                             <option value="<?php echo $membro['id_usuario']; ?>" <?php if ($membro['id_usuario'] == $meu_id)
                                    echo 'selected'; ?>>
@@ -289,14 +288,14 @@ function getCategoryIcon($categoria)
                     <label>Finalidade (Descrição):</label>
                     <div class="form-group input-wrapper liquid-glass">
                         <i class="fa fa-key input-icon"></i>
-                        <input type="text" name="descricao" placeholder="Ex: Airbnb, Jantar, etc." class="" required>
+                        <input type="text" name="descricao" id="expense-descricao" placeholder="Ex: Airbnb, Jantar, etc."
+                            class="" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-
                     <label>Categoria:</label>
-                    <select name="categoria" class="new-modal-select" required>
+                    <select name="categoria" id="expense-categoria" class="new-modal-select" required>
                         <option value="">-- Selecione a Categoria --</option>
                         <option value="Moradia">🏠 Moradia (Ex: Aluguel, Airbnb)</option>
                         <option value="Alimentação">🛒 Alimentação (Ex: Mercado, Pizza)</option>
@@ -305,23 +304,25 @@ function getCategoryIcon($categoria)
                         <option value="Outros">💰 Outros</option>
                     </select>
                 </div>
+
                 <div class="form-group mb-3">
                     <label>Valor:</label>
                     <div class="form-group input-wrapper liquid-glass">
                         <i class="fa fa-key input-icon"></i>
-                        <input type="text" name="valor_total" placeholder="1.500,00" required>
+                        <input type="text" name="valor_total" id="expense-valor-total" placeholder="1.500,00" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Data</label>
-                    <input type="date" name="data_despesa" value="<?php echo date('Y-m-d'); ?>" class="new-modal-input"
-                        required>
+                    <input type="date" name="data_despesa" id="expense-data-despesa" value="<?php echo date('Y-m-d'); ?>"
+                        class="new-modal-input" required>
                 </div>
 
                 <div class="form-group-division-header">
                     <label>Para quem</label>
-                    <select name="tipo_divisao" onchange="toggleDivisao(this.value)" class="new-modal-select-simple">
+                    <select name="tipo_divisao" id="expense-tipo-divisao" onchange="toggleDivisao(this.value)"
+                        class="new-modal-select-simple">
                         <option value="equitativa">Divisão simples</option>
                         <option value="manual">Divisão manual</option>
                     </select>
@@ -332,8 +333,8 @@ function getCategoryIcon($categoria)
                         <div class="member-checkbox-item">
                             <div class="member-avatar-small"></div>
                             <span><?php echo htmlspecialchars($membro['nome']); ?></span>
-                            <input type="checkbox" name="divisao_equitativa[]" value="<?php echo $membro['id_usuario']; ?>"
-                                checked>
+                            <input type="checkbox" class="expense-divisao-equitativa" name="divisao_equitativa[]"
+                                value="<?php echo $membro['id_usuario']; ?>" checked>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -344,7 +345,9 @@ function getCategoryIcon($categoria)
                     <?php foreach ($membros as $membro): ?>
                         <div>
                             <label style="color: #fff !important;"><?php echo htmlspecialchars($membro['nome']); ?>:</label>
-                            R$ <input type="text" name="divisao_manual[<?php echo $membro['id_usuario']; ?>]" value="0,00"
+                            R$ <input type="text" class="expense-divisao-manual"
+                                name="divisao_manual[<?php echo $membro['id_usuario']; ?>]"
+                                id="expense-divisao-manual-<?php echo $membro['id_usuario']; ?>" value="0,00"
                                 style="width: 100px; display: inline-block; color: #fff; background: #555;">
                         </div>
                     <?php endforeach; ?>
@@ -357,11 +360,21 @@ function getCategoryIcon($categoria)
                     <input type="file" name="recibo" id="recibo-upload" style="display: none;">
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 15px;">Salvar</button>
+                <button type="submit" id="expense-modal-submit-btn" class="btn btn-primary btn-block"
+                    style="margin-top: 15px;">Salvar</button>
             </form>
+
+            <div id="delete-expense-container" style="display: none; margin-top: 15px;">
+                <form id="delete-expense-form" action="expense/delete" method="POST"
+                    onsubmit="return confirm('Tem certeza que deseja excluir esta despesa? (MSG22)');">
+                    <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
+                    <input type="hidden" name="id_despesa" id="delete-id-despesa" value="">
+                    <button type="submit" class="btn btn-primary w-100"
+                        style="background: #E84545 !important; border-color: #E84545 !important">Excluir Despesa</button>
+                </form>
+            </div>
         </div>
     </div>
-
 
     <div id="modal-add-settlement" class="modal-overlay">
         <div class="modal-content">
@@ -510,12 +523,14 @@ function getCategoryIcon($categoria)
             console.error("Erro: Modal não encontrado: " + modalId);
         }
     }
+
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
-        if (modal) { // Verifica se existe antes de tentar fechar
+        if (modal) {
             modal.classList.remove('visible');
         }
     }
+
     window.onclick = function (event) {
         if (event.target.classList.contains('modal-overlay')) {
             if (event.target.id !== 'noGroupsModal') {
@@ -525,16 +540,19 @@ function getCategoryIcon($categoria)
     }
 
     function toggleDivisao(tipo) {
-        if (tipo === 'manual') {
-            document.getElementById('div_manual_inputs').style.display = 'block';
-            document.getElementById('div_equitativa_inputs').style.display = 'none';
-        } else {
-            document.getElementById('div_manual_inputs').style.display = 'none';
-            document.getElementById('div_equitativa_inputs').style.display = 'block';
+        const manualInputs = document.getElementById('div_manual_inputs');
+        const equitativaInputs = document.getElementById('div_equitativa_inputs');
+        if (manualInputs && equitativaInputs) {
+            if (tipo === 'manual') {
+                manualInputs.style.display = 'block';
+                equitativaInputs.style.display = 'none';
+            } else {
+                manualInputs.style.display = 'none';
+                equitativaInputs.style.display = 'block';
+            }
         }
     }
 
-    // Função que estava em falta (agora está disponível para o 'if' e para o 'else')
     function fetchInviteCode(id_grupo) {
         const displayInput = document.getElementById('invite-code-display');
         displayInput.value = "Gerando...";
@@ -549,7 +567,6 @@ function getCategoryIcon($categoria)
             .then(data => {
                 if (data.success) {
                     displayInput.value = data.code;
-                    // Atualiza o código na página (no "estado vazio") se ele existir
                     const codeDisplayEmpty = document.getElementById('empty-state-code');
                     if (codeDisplayEmpty) {
                         codeDisplayEmpty.textContent = data.code;
@@ -564,7 +581,6 @@ function getCategoryIcon($categoria)
             });
     }
 
-    // Função que estava em falta
     function copyCodeToClipboard() {
         const displayInput = document.getElementById('invite-code-display');
         displayInput.select();
@@ -573,6 +589,80 @@ function getCategoryIcon($categoria)
         }).catch(err => {
             alert("Falha ao copiar. Tente manualmente.");
         });
+    }
+
+    function openCreateModal() {
+        const form = document.getElementById('expense-form');
+        form.action = 'expense/create';
+
+        document.getElementById('expense-modal-title').textContent = 'Nova Despesa';
+        document.getElementById('expense-modal-submit-btn').textContent = 'Salvar';
+
+        document.getElementById('expense-id-despesa').value = '';
+        document.getElementById('expense-descricao').value = '';
+        document.getElementById('expense-valor-total').value = '';
+        document.getElementById('expense-data-despesa').value = '<?php echo date('Y-m-d'); ?>';
+        document.getElementById('expense-categoria').value = '';
+        document.getElementById('expense-id-pagador').value = '<?php echo $meu_id; ?>';
+
+        document.getElementById('expense-tipo-divisao').value = 'equitativa';
+        toggleDivisao('equitativa');
+        document.querySelectorAll('.expense-divisao-equitativa').forEach(chk => chk.checked = true);
+        document.querySelectorAll('.expense-divisao-manual').forEach(inp => inp.value = '0,00');
+
+        document.getElementById('delete-expense-container').style.display = 'none';
+
+        openModal('modal-add-expense');
+    }
+
+    function openEditModal(id_despesa) {
+        const BASE_URL = "/GitHub/MoneyGuard-poo2/public/";
+
+        fetch(BASE_URL + `expense/get_details/${id_despesa}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                const { despesa, splits } = data;
+
+                const form = document.getElementById('expense-form');
+                form.action = 'expense/update';
+                document.getElementById('expense-modal-title').textContent = 'Editar Despesa';
+                document.getElementById('expense-modal-submit-btn').textContent = 'Atualizar';
+
+                document.getElementById('expense-id-despesa').value = despesa.id_despesa;
+                document.getElementById('expense-descricao').value = despesa.descricao;
+                document.getElementById('expense-valor-total').value = despesa.valor_total.replace('.', ',');
+                document.getElementById('expense-data-despesa').value = despesa.data_despesa;
+                document.getElementById('expense-categoria').value = despesa.categoria;
+                document.getElementById('expense-id-pagador').value = despesa.id_pagador;
+
+                document.getElementById('expense-tipo-divisao').value = despesa.tipo_divisao;
+                toggleDivisao(despesa.tipo_divisao);
+
+                if (despesa.tipo_divisao === 'manual') {
+                    document.querySelectorAll('.expense-divisao-manual').forEach(inp => {
+                        const id_part = inp.name.match(/\[(\d+)\]/)[1];
+                        inp.value = splits[id_part] ? splits[id_part].replace('.', ',') : '0,00';
+                    });
+                } else {
+                    document.querySelectorAll('.expense-divisao-equitativa').forEach(chk => {
+                        chk.checked = !!splits[chk.value];
+                    });
+                }
+
+                document.getElementById('delete-id-despesa').value = despesa.id_despesa;
+                document.getElementById('delete-expense-container').style.display = 'block';
+
+                openModal('modal-add-expense');
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro ao buscar dados da despesa.');
+            });
     }
 </script>
 

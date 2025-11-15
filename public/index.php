@@ -28,14 +28,14 @@ switch (true) {
         break;
 
     case ($url == 'dashboard'):
-        $controller =new GroupController();
+        $controller = new GroupController();
         $controller->index();
         break;
 
     case ($url == 'groups'):
         require_once '../views/pages/groups_list.php';
         break;
-        
+
     case ($url == 'group/create'):
         $controller = new GroupController();
         $controller->create();
@@ -74,6 +74,11 @@ switch (true) {
     case ($url == 'expense/update'):
         $controller = new ExpenseController();
         $controller->update();
+        break;
+
+    case (preg_match('/^expense\/get_details\/(\d+)$/', $url, $matches)):
+        $controller = new ExpenseController();
+        $controller->getDetails($matches[1]);
         break;
 
     case (preg_match('/^group\/report\/(\d+)$/', $url, $matches)):
@@ -117,9 +122,9 @@ switch (true) {
         break;
 
     case ($url == 'transaction'):
-       $controller = new GroupController();
-       $controller->transfers();
-       break;
+        $controller = new GroupController();
+        $controller->transfers();
+        break;
 
     case ($url == 'recent_activities'):
         $controller = new GroupController();
