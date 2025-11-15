@@ -48,6 +48,12 @@ class ExpenseController
             exit;
         }
 
+        $hoje = date('Y-m-d');
+        if ($data_despesa > $hoje) {
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("A data da despesa não pode ser futura. (RN-ORG03)"));
+            exit;
+        }
+        
         $groupModel = new Group($this->db);
         if (!$groupModel->isUserMember($id_grupo, $this->user_id)) {
             echo "Erro: Você não tem permissão para adicionar despesas a este grupo.";
@@ -279,7 +285,7 @@ class ExpenseController
             $max_size = 5 * 1024 * 1024;
             $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
 
-            // Validações
+
             if ($file['size'] > $max_size) {
                 return "Erro: Ficheiro muito grande (Max 5MB).";
             }

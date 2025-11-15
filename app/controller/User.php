@@ -6,7 +6,7 @@ require_once '../app/model/Group.php';
 class UserController
 {
 
-    // Método para o CDU02 (Login)
+
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -54,7 +54,7 @@ class UserController
         exit;
     }
 
-    // Método para o CDU01 (Cadastro)
+
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -65,6 +65,13 @@ class UserController
             $data_nascimento = $_POST['data_nascimento'];
             if (empty($nome) || empty($email) || empty($senha) || empty($data_nascimento)) {
                 $error = "Todos os campos são obrigatórios.";
+                require_once '../views/pages/register.php';
+                return;
+            }
+
+            $hoje = date('Y-m-d');
+            if ($data_nascimento >= $hoje) {
+                $error = "A data de nascimento deve ser no passado. (RN-ORG14)";
                 require_once '../views/pages/register.php';
                 return;
             }
