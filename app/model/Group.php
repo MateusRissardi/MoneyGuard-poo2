@@ -104,9 +104,10 @@ class Group
             $query .= ' AND e.categoria = :categoria';
             $params['categoria'] = $filtros['categoria'];
         }
-        if (!empty($filtros['id_pagador'])) {
-            $query .= ' AND e.id_pagador = :id_pagador';
-            $params['id_pagador'] = $filtros['id_pagador'];
+
+        if (!empty($filtros['id_pagador_ou_devedor'])) {
+            $query .= ' AND e.id_pagador = :id_pagador_ou_devedor';
+            $params['id_pagador_ou_devedor'] = $filtros['id_pagador_ou_devedor'];
         }
 
         $query .= ' ORDER BY e.data_despesa DESC, e.id_despesa DESC';
@@ -208,7 +209,7 @@ class Group
         }
     }
 
-    public function getSettlementsByGroup($id_grupo)
+    public function getSettlementsByGroup($id_grupo, $filtros = [])
     {
         $query = 'SELECT 
                     s.*, 
@@ -217,11 +218,20 @@ class Group
                   FROM "Settlement" s
                   JOIN "User" u_devedor ON s.id_devedor = u_devedor.id_usuario
                   JOIN "User" u_credor ON s.id_credor = u_credor.id_usuario
-                  WHERE s.id_grupo = :id_grupo
-                  ORDER BY s.data_pagamento DESC, s.id_acerto DESC';
+                  WHERE s.id_grupo = :id_grupo';
+
+        $params = ['id_grupo' => $id_grupo];
+
+        // Adiciona o filtro de "pagador" (devedor)
+        if (!empty($filtros['id_devedor'])) {
+            $query .= ' AND s.id_devedor = :id_devedor';
+            $params['id_devedor'] = $filtros['id_devedor'];
+        }
+
+        $query .= ' ORDER BY s.data_pagamento DESC, s.id_acerto DESC';
 
         $stmt = $this->conn->prepare($query);
-        $stmt->execute(['id_grupo' => $id_grupo]);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
@@ -282,6 +292,20 @@ class Group
         } catch (PDOException $e) {
             return "Erro ao remover membro: " . $e->getMessage();
         }
+    }
+
+    public function getJoinActivities($id_grupo)
+    {
+        $query = 'SELECT 
+                    u.nome, 
+                    gm.data_entrada
+                  FROM "GroupMember" gm
+                  JOIN "User" u ON gm.id_usuario = u.id_usuario
+                  WHERE gm.id_grupo = :id_grupo
+                  ORDER BY gm.data_entrada DESC';
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['id_grupo' => $id_grupo]);
+        return $stmt->fetchAll();
     }
 }
 ?>

@@ -117,8 +117,9 @@ switch (true) {
        exit;
 
     case ($url == 'recent_activities'):
-        require_once '../views/pages/recent_activities.php';
-        exit;
+        $controller = new GroupController();
+        $controller->activities();
+        break;
 
     case ($url == ''):
         if (isset($_SESSION['user_id'])) {

@@ -285,5 +285,56 @@ class GroupController
         }
         exit;
     }
+
+    public function activities()
+    {
+        // 1. Obter o ID do último grupo acedido da sessão
+        if (!isset($_SESSION['ultimo_grupo_acessado_id'])) {
+            header("Location: " . BASE_URL . "groups");
+            exit;
+        }
+
+        $id_grupo = $_SESSION['ultimo_grupo_acessado_id'];
+
+        // 2. Carregar dados base
+        $groupModel = new Group($this->db);
+        $grupo = $groupModel->getGroupById($id_grupo);
+        $membros = $groupModel->getMembersByGroup($id_grupo);
+
+        // 3. Ler todos os filtros da URL (GET)
+        $filtro_categoria_atual = $_GET['filtro_categoria'] ?? null;
+        $filtro_pagador_atual = $_GET['filtro_pagador'] ?? null;
+        $filtros_ativos = !empty($filtro_categoria_atual) || !empty($filtro_pagador_atual);
+
+        // 4. Preparar os arrays de filtros para os modelos
+        $filtros_despesa = [
+            'categoria' => $filtro_categoria_atual,
+            'id_pagador' => $filtro_pagador_atual
+        ];
+        $filtros_despesa = array_filter($filtros_despesa);
+
+        $filtros_acerto = [
+            'id_devedor' => $filtro_pagador_atual
+        ];
+        $filtros_acerto = array_filter($filtros_acerto);
+
+        // 5. Buscar dados com base nos filtros
+        $despesas = $groupModel->getExpensesByGroup($id_grupo, $this->user_id, $filtros_despesa);
+
+        $acertos = [];
+        // Se um filtro de categoria estiver ativo, NÃO mostramos os acertos.
+        if (empty($filtro_categoria_atual)) {
+            $acertos = $groupModel->getSettlementsByGroup($id_grupo, $filtros_acerto);
+        }
+
+        $entradas_membros = [];
+        // Só mostra entradas de membros se nenhum filtro estiver ativo
+        if (!$filtros_ativos) {
+            $entradas_membros = $groupModel->getJoinActivities($id_grupo);
+        }
+
+        // 6. Carregar a view
+        require_once '../views/pages/recent_activities.php';
+    }
 }
 ?>
