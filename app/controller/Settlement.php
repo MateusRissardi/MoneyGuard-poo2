@@ -40,6 +40,12 @@ class SettlementController
             exit;
         }
 
+        $hoje = date('Y-m-d');
+        if ($data_pagamento > $hoje) {
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("A data do acerto não pode ser futura. (RN-ORG03)"));
+            exit;
+        }
+
         if ($id_devedor == $id_credor) {
             header("Location: ../group/view/$id_grupo?error=settlement_self");
             exit;
@@ -85,6 +91,58 @@ class SettlementController
             header("Location: ../group/view/$id_grupo?status=settlement_deleted"); // (MSG03 - Reutilizado)
         } else {
             header("Location: ../group/view/$id_grupo?error=" . urlencode($result));
+        }
+        exit;
+    }
+
+    public function createAllMyDebts()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            header("Location: " . BASE_URL . "dashboard");
+            exit;
+        }
+
+        $id_grupo = $_POST['id_grupo'];
+        $id_devedor_logado = $this->user_id;
+
+        require_once '../app/model/Expense.php';
+        $expenseModel = new Expense($this->db);
+        $transacoes_simplificadas = $expenseModel->simplifyDebts($id_grupo);
+
+        $settlementModel = new Settlement($this->db);
+        $pagamentos_feitos = 0;
+        $erros = 0;
+
+        foreach ($transacoes_simplificadas as $transacao) {
+
+            if ($transacao['devedor_id'] == $id_devedor_logado) {
+
+                $result = $settlementModel->create(
+                    $id_grupo,
+                    $id_devedor_logado,
+                    $transacao['credor_id'],
+                    $transacao['valor'],
+                    date('Y-m-d') // Usa a data de hoje
+                );
+
+                if ($result) {
+                    $pagamentos_feitos++;
+                } else {
+                    $erros++;
+                }
+            }
+        }
+
+        header_remove("Pragma");
+        header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+
+        if ($erros > 0) {
+            header("Location: " . BASE_URL . "transaction?error=batch_settlement_failed");
+        } elseif ($pagamentos_feitos > 0) {
+            header("Location: " . BASE_URL . "transaction?status=batch_settlement_success");
+        } else {
+
+            header("Location: " . BASE_URL . "transaction");
         }
         exit;
     }

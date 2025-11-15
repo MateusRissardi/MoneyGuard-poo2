@@ -91,6 +91,11 @@ switch (true) {
         $controller->create();
         break;
 
+    case ($url == 'settlement/create_all_my_debts'):
+        $controller = new SettlementController();
+        $controller->createAllMyDebts();
+        break;
+
     case (preg_match('/^group\/generate_code\/(\d+)$/', $url, $matches)):
         $controller = new GroupController();
         $controller->generateInviteCode($matches[1]);
@@ -106,15 +111,15 @@ switch (true) {
         $controller->delete();
         break;
 
-        
     case ($url == 'group/remove_member'):
         $controller = new GroupController();
         $controller->removeMember();
         break;
 
     case ($url == 'transaction'):
-       require_once '../views/pages/transaction.php';
-       exit;
+       $controller = new GroupController();
+       $controller->transfers();
+       break;
 
     case ($url == 'recent_activities'):
         $controller = new GroupController();

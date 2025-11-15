@@ -96,13 +96,13 @@ class Expense
         ];
 
         $stmt->execute($params);
-        
+
         $saldos = $stmt->fetchAll();
         foreach ($saldos as &$saldo) {
             $saldo['total_credito'] = $saldo['total_pago'];
             $saldo['total_debito'] = $saldo['total_consumido'];
         }
-        
+
         return $saldos;
     }
 
@@ -146,7 +146,7 @@ class Expense
 
         $this->conn->beginTransaction();
         try {
-            // 1. Verificar permissão
+
             $despesa_atual = $this->getExpenseById($id_despesa);
             if ($despesa_atual['id_pagador'] != $id_pagador_logado) {
                 return "Você não tem permissão para editar esta despesa.";
@@ -241,10 +241,11 @@ class Expense
         foreach ($saldos_atuais as $saldo_usuario) {
             $saldo = $saldo_usuario['total_credito'] - $saldo_usuario['total_debito'];
 
+
             if ($saldo > 0.01) {
-                $credores[] = ['nome' => $saldo_usuario['nome'], 'saldo' => $saldo];
+                $credores[] = ['id' => $saldo_usuario['id_usuario'], 'nome' => $saldo_usuario['nome'], 'saldo' => $saldo];
             } elseif ($saldo < -0.01) {
-                $devedores[] = ['nome' => $saldo_usuario['nome'], 'saldo' => abs($saldo)];
+                $devedores[] = ['id' => $saldo_usuario['id_usuario'], 'nome' => $saldo_usuario['nome'], 'saldo' => abs($saldo)];
             }
         }
 
@@ -257,9 +258,12 @@ class Expense
 
             $valor_pagamento = min($credor['saldo'], $devedor['saldo']);
 
+
             $transacoes[] = [
-                'devedor' => $devedor['nome'],
-                'credor' => $credor['nome'],
+                'devedor_id' => $devedor['id'],
+                'devedor_nome' => $devedor['nome'],
+                'credor_id' => $credor['id'],
+                'credor_nome' => $credor['nome'],
                 'valor' => $valor_pagamento
             ];
 

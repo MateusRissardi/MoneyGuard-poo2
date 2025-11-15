@@ -47,7 +47,7 @@ class GroupController
         }
     }
 
-    // Método para CDU09 (Criar Grupo)
+
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -226,7 +226,7 @@ class GroupController
         header_remove("Pragma");
         header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
-        // Validação (HU-E02)
+
         if (empty($novo_nome)) {
             header("Location: ../group/view/$id_grupo?error=empty_group_name");
             exit;
@@ -288,7 +288,7 @@ class GroupController
 
     public function activities()
     {
-        // 1. Obter o ID do último grupo acedido da sessão
+
         if (!isset($_SESSION['ultimo_grupo_acessado_id'])) {
             header("Location: " . BASE_URL . "groups");
             exit;
@@ -296,17 +296,17 @@ class GroupController
 
         $id_grupo = $_SESSION['ultimo_grupo_acessado_id'];
 
-        // 2. Carregar dados base
+
         $groupModel = new Group($this->db);
         $grupo = $groupModel->getGroupById($id_grupo);
         $membros = $groupModel->getMembersByGroup($id_grupo);
 
-        // 3. Ler todos os filtros da URL (GET)
+
         $filtro_categoria_atual = $_GET['filtro_categoria'] ?? null;
         $filtro_pagador_atual = $_GET['filtro_pagador'] ?? null;
         $filtros_ativos = !empty($filtro_categoria_atual) || !empty($filtro_pagador_atual);
 
-        // 4. Preparar os arrays de filtros para os modelos
+
         $filtros_despesa = [
             'categoria' => $filtro_categoria_atual,
             'id_pagador' => $filtro_pagador_atual
@@ -318,23 +318,43 @@ class GroupController
         ];
         $filtros_acerto = array_filter($filtros_acerto);
 
-        // 5. Buscar dados com base nos filtros
+
         $despesas = $groupModel->getExpensesByGroup($id_grupo, $this->user_id, $filtros_despesa);
 
         $acertos = [];
-        // Se um filtro de categoria estiver ativo, NÃO mostramos os acertos.
+
         if (empty($filtro_categoria_atual)) {
             $acertos = $groupModel->getSettlementsByGroup($id_grupo, $filtros_acerto);
         }
 
         $entradas_membros = [];
-        // Só mostra entradas de membros se nenhum filtro estiver ativo
+
         if (!$filtros_ativos) {
             $entradas_membros = $groupModel->getJoinActivities($id_grupo);
         }
 
-        // 6. Carregar a view
+
         require_once '../views/pages/recent_activities.php';
+    }
+
+    public function transfers()
+    {
+        if (!isset($_SESSION['ultimo_grupo_acessado_id'])) {
+            header("Location: " . BASE_URL . "groups");
+            exit;
+        }
+        $id_grupo = $_SESSION['ultimo_grupo_acessado_id'];
+
+
+        $groupModel = new Group($this->db);
+        $grupo = $groupModel->getGroupById($id_grupo); // Necessário para o header.php
+
+
+        $expenseModel = new Expense($this->db);
+        $transacoes_simplificadas = $expenseModel->simplifyDebts($id_grupo);
+
+
+        require_once '../views/pages/transaction.php';
     }
 }
 ?>
