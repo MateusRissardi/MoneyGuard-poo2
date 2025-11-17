@@ -219,7 +219,8 @@ function getCategoryColorClass($categoria)
                             <?php endif; ?>
                         </div>
                     </div>
-                <?php else: // $transacao['tipo'] == 'acerto' ?>
+                <?php else: // $transacao['tipo'] == 'acerto' 
+                ?>
                     <div class="transaction-item">
 
                         <div class="transaction-icon icon-acerto">
@@ -255,8 +256,8 @@ function getCategoryColorClass($categoria)
     <div class="list-section">
         <div class="list-section-header">
             <h2>Membros do grupo</h2>
-            <a href="#" class="btn-manage" onclick="openModal('modal-manage-members'); return false;"
-                title="Gerenciar Membros e Grupo">
+            <a href="group/settings/<?php echo $grupo['id_grupo']; ?>" class="btn-manage"
+                title="Configurações do Grupo">
                 <i class="fa fa-cog"></i>
             </a>
         </div>
@@ -317,7 +318,7 @@ function getCategoryColorClass($categoria)
                     <select name="id_pagador" id="expense-id-pagador" class="new-modal-select">
                         <?php foreach ($membros as $membro): ?>
                             <option value="<?php echo $membro['id_usuario']; ?>" <?php if ($membro['id_usuario'] == $meu_id)
-                                   echo 'selected'; ?>>
+                                                                                        echo 'selected'; ?>>
                                 <?php echo htmlspecialchars($membro['nome']); ?>
                             </option>
                         <?php endforeach; ?>
@@ -439,7 +440,8 @@ function getCategoryColorClass($categoria)
                         if ($membro['id_usuario'] != $meu_id): ?>
                             <option value="<?php echo $membro['id_usuario']; ?>"><?php echo htmlspecialchars($membro['nome']); ?>
                             </option>
-                        <?php endif; endforeach; ?>
+                    <?php endif;
+                    endforeach; ?>
                 </select>
 
                 <label>Valor: </label>
@@ -491,7 +493,7 @@ function getCategoryColorClass($categoria)
 
                     <div class="d-flex align-items-center">
                         <p style=" text-wrap: nowrap; font-weight: bold;">Código de Convite: <span
-                            id="admin-invite-code"><?php echo htmlspecialchars($grupo['codigo_convite']); ?></span>
+                                id="admin-invite-code"><?php echo htmlspecialchars($grupo['codigo_convite']); ?></span>
                         </p>
                         <button type="button" class="btn btn-primary w-100"
                             onclick="fetchInviteCode('<?php echo $grupo['id_grupo']; ?>')">
@@ -574,7 +576,7 @@ function getCategoryColorClass($categoria)
         }
     }
 
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         if (event.target.classList.contains('modal-overlay')) {
             if (event.target.id !== 'noGroupsModal') {
                 event.target.classList.remove('visible');
@@ -599,11 +601,11 @@ function getCategoryColorClass($categoria)
         displayInput.value = "Gerando...";
         openModal('modal-show-code');
 
-        const BASE_URL = "/GitHub/MoneyGuard-poo2/public/";
+        const BASE_URL = "/MoneyGuard-poo2/public/";
 
         fetch(BASE_URL + `group/generate_code/${id_grupo}`, {
-            method: 'POST'
-        })
+                method: 'POST'
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -688,7 +690,10 @@ function getCategoryColorClass($categoria)
                 let remaining = totalVal - changedVal;
                 if (remaining < 0) remaining = 0;
 
-                otherInput.value = remaining.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                otherInput.value = remaining.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
             }
         }
 
@@ -707,7 +712,10 @@ function getCategoryColorClass($categoria)
         if (Math.abs(diff) < 0.01) {
             infoDisplay.innerHTML = '<span style="color: var(--color-success);">Soma correta!</span>';
         } else {
-            let diffFmt = Math.abs(diff).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            let diffFmt = Math.abs(diff).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
             if (diff > 0) {
                 infoDisplay.innerHTML = `<span style="color: var(--color-text-secondary);">Falta distribuir: ${diffFmt}</span>`;
             } else {
@@ -747,7 +755,7 @@ function getCategoryColorClass($categoria)
     }
 
     function openEditModal(id_despesa) {
-        const BASE_URL = "/GitHub/MoneyGuard-poo2/public/";
+        const BASE_URL = "/MoneyGuard-poo2/public/";
 
         fetch(BASE_URL + `expense/get_details/${id_despesa}`)
             .then(response => response.json())
@@ -757,7 +765,10 @@ function getCategoryColorClass($categoria)
                     return;
                 }
 
-                const { despesa, splits } = data;
+                const {
+                    despesa,
+                    splits
+                } = data;
 
                 const form = document.getElementById('expense-form');
                 form.action = 'expense/update';
@@ -768,7 +779,10 @@ function getCategoryColorClass($categoria)
                 document.getElementById('expense-id-despesa').value = despesa.id_despesa;
                 document.getElementById('expense-descricao').value = despesa.descricao;
 
-                let valorFormatado = parseFloat(despesa.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                let valorFormatado = parseFloat(despesa.valor_total).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
                 document.getElementById('expense-valor-total').value = valorFormatado;
 
                 document.getElementById('expense-data-despesa').value = despesa.data_despesa;
@@ -787,7 +801,10 @@ function getCategoryColorClass($categoria)
                     document.querySelectorAll('.expense-divisao-manual').forEach(inp => {
                         const id_part = inp.name.match(/\[(\d+)\]/)[1];
                         let valorSplit = splits[id_part] ? parseFloat(splits[id_part]) : 0;
-                        inp.value = valorSplit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        inp.value = valorSplit.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        });
                     });
                     // Trigger validation visual
                     autoBalanceManual(null);
@@ -808,14 +825,14 @@ function getCategoryColorClass($categoria)
             });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const fileInput = document.getElementById('recibo-upload');
         const labelText = document.getElementById('recibo-label-text');
 
         if (fileInput && labelText) {
             const originalLabel = 'Anexar comprovante';
 
-            fileInput.addEventListener('change', function () {
+            fileInput.addEventListener('change', function() {
                 if (this.files && this.files.length > 0) {
                     labelText.textContent = this.files[0].name;
                 } else {

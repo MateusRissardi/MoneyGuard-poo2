@@ -109,6 +109,22 @@ class GroupController
         require_once '../views/pages/group_view.php';
     }
 
+    public function settings($id_grupo)
+    {
+        $groupModel = new Group($this->db);
+
+        if (!$groupModel->isUserMember($id_grupo, $this->user_id)) {
+            header("Location: " . BASE_URL . "dashboard?error=not_member");
+            exit;
+        }
+
+        $grupo = $groupModel->getGroupById($id_grupo);
+        $membros = $groupModel->getMembersByGroup($id_grupo);
+        $meu_id = $this->user_id;
+
+        require_once '../views/pages/settings.php';
+    }
+
     public function addMember()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASE_URL', '/GitHub/MoneyGuard-poo2/public/');
+define('BASE_URL', '/MoneyGuard-poo2/public/');
 
 require_once '../app/core/Database.php';
 require_once '../app/controller/User.php';
@@ -44,6 +44,11 @@ switch (true) {
     case (preg_match('/^group\/view\/(\d+)$/', $url, $matches)):
         $controller = new GroupController();
         $controller->view($matches[1]);
+        break;
+
+    case (preg_match('/^group\/settings\/(\d+)$/', $url, $matches)):
+        $controller = new GroupController();
+        $controller->settings($matches[1]);
         break;
 
     case ($url == 'group/add_member'):
@@ -101,7 +106,7 @@ switch (true) {
         $controller->createAllMyDebts();
         break;
 
-    case (preg_match('/^group\/generate_code\/(\d+)$/', $url, $matches)):
+    case (preg_match('/^group\/generateInviteCode\/(\d+)$/', $url, $matches)):
         $controller = new GroupController();
         $controller->generateInviteCode($matches[1]);
         break;
@@ -158,4 +163,3 @@ switch (true) {
         echo "Página não encontrada (404)";
         break;
 }
-?>
