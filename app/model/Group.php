@@ -45,7 +45,9 @@ class Group
 
     public function getGroupsByUser($id_usuario)
     {
-        $query = 'SELECT g.* FROM "Group" g
+        $query = 'SELECT g.*, 
+                  (SELECT COUNT(*) FROM "GroupMember" gm_count WHERE gm_count.id_grupo = g.id_grupo) as total_membros
+                  FROM "Group" g
                   JOIN "GroupMember" gm ON g.id_grupo = gm.id_grupo
                   WHERE gm.id_usuario = :id_usuario
                   ORDER BY g.nome_grupo';
@@ -253,6 +255,7 @@ class Group
             return "Erro ao atualizar o nome: " . $e->getMessage();
         }
     }
+
     public function delete($id_grupo, $id_usuario_logado)
     {
         try {
@@ -271,6 +274,7 @@ class Group
             return "Erro ao excluir o grupo: " . $e->getMessage();
         }
     }
+
     public function removeMember($id_grupo, $id_membro_remover, $id_usuario_logado)
     {
         try {

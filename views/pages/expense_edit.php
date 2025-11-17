@@ -6,8 +6,6 @@ require_once '../views/components/header.php';
     <a href="../group/view/<?php echo $despesa['id_grupo']; ?>">&laquo; Voltar para o Grupo</a>
 </nav>
 
-<!-- <h2>Editar Despesa (CDU04 / HU011)</h2> -->
-
 <div style="background: #e0f0e0; padding: 15px;">
 
     <?php if (isset($_GET['error'])): ?>

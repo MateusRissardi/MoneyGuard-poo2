@@ -156,13 +156,17 @@ class Expense
                             valor_total = :valor, 
                             categoria = :cat, 
                             data_despesa = :data_desp,
-                            tipo_divisao = :tipo_divisao';
+                            tipo_divisao = :tipo_divisao,
+                            id_pagador = :id_pagador,
+                            descricao = :descricao';
 
             $params = [
                 'valor' => $data['valor_total'],
                 'cat' => $data['categoria'],
                 'data_desp' => $data['data_despesa'],
                 'tipo_divisao' => $data['tipo_divisao'],
+                'id_pagador' => $data['id_pagador'],
+                'descricao' => $data['descricao'],
                 'id_despesa' => $id_despesa
             ];
 

@@ -14,7 +14,7 @@ class ExpenseController
         $this->db = Database::getInstance()->getConnection();
 
         if (!isset($_SESSION['user_id'])) {
-            header("Location: ../login?error=auth");
+            header("Location: " . BASE_URL . "login?error=auth");
             exit;
         }
         $this->user_id = $_SESSION['user_id'];
@@ -29,7 +29,7 @@ class ExpenseController
 
         $id_grupo = $_POST['id_grupo'];
         $id_pagador = $_POST['id_pagador'];
-        $valor_total_str = str_replace('.', '', $_POST['valor_total']);
+        $valor_total_str = preg_replace("/[^0-9,]/", "", $_POST['valor_total']);
         $valor_total = (float) str_replace(',', '.', $valor_total_str);
 
         $categoria = $_POST['categoria'];
@@ -40,11 +40,16 @@ class ExpenseController
 
         $url_recibo = $this->handleFileUpload();
 
+        if (is_string($url_recibo) && str_starts_with($url_recibo, "Erro:")) {
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode($url_recibo));
+            exit;
+        }
+
         header_remove("Pragma");
         header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         if (empty($id_pagador) || empty($valor_total) || empty($categoria) || empty($data_despesa) || $valor_total <= 0 || empty($descricao)) {
-            header("Location: " . BASE_URL . "group/view/$id_grupo?error=validation"); // CORRIGIDO
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=validation");
             exit;
         }
 
@@ -61,7 +66,7 @@ class ExpenseController
         }
 
         if (strlen($categoria) > 50) {
-            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("Categoria deve ter no máximo 50 caracteres. (RN-ORG04)")); // CORRIGIDO
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("Categoria deve ter no máximo 50 caracteres. (RN-ORG04)"));
             exit;
         }
 
@@ -76,10 +81,11 @@ class ExpenseController
             foreach ($membros as $membro) {
                 $id_membro = $membro['id_usuario'];
                 $valor_str = $divisao_manual[$id_membro] ?? '0';
-                $valor_membro = (float) str_replace(',', '.', $valor_str);
+                $valor_str_limpo = preg_replace("/[^0-9,]/", "", $valor_str);
+                $valor_membro = (float) str_replace(',', '.', $valor_str_limpo);
 
                 if ($valor_membro < 0) {
-                    header("Location: ../group/view/$id_grupo?error=" . urlencode("Divisão manual não pode ter valores negativos. (RN-ORG05)"));
+                    header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("Divisão manual não pode ter valores negativos. (RN-ORG05)"));
                     exit;
                 }
 
@@ -93,7 +99,7 @@ class ExpenseController
             }
 
             if (abs($soma_manual - $valor_total) > 0.01) {
-                header("Location: ../group/view/$id_grupo?error=" . urlencode("Soma da divisão manual (R$ $soma_manual) não bate com o Valor Total (R$ $valor_total). (RN-ORG02)"));
+                header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("Soma da divisão manual (R$ $soma_manual) não bate com o Valor Total (R$ $valor_total). (RN-ORG02)"));
                 exit;
             }
 
@@ -101,7 +107,7 @@ class ExpenseController
             $ids_membros_selecionados = $_POST['divisao_equitativa'] ?? [];
 
             if (empty($ids_membros_selecionados)) {
-                header("Location: ../group/view/$id_grupo?error=" . urlencode("A despesa deve ter pelo menos um participante. (RN-ORG09)"));
+                header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("A despesa deve ter pelo menos um participante. (RN-ORG09)"));
                 exit;
             }
 
@@ -117,7 +123,7 @@ class ExpenseController
         }
 
         if (empty($divisao)) {
-            header("Location: ../group/view/$id_grupo?error=" . urlencode("A despesa deve ter pelo menos um participante. (RN-ORG09)"));
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=" . urlencode("A despesa deve ter pelo menos um participante. (RN-ORG09)"));
             exit;
         }
 
@@ -135,13 +141,12 @@ class ExpenseController
         );
 
         if ($result) {
-            header("Location: " . BASE_URL . "group/view/$id_grupo?status=expense_added"); // CORRIGIDO
+            header("Location: " . BASE_URL . "group/view/$id_grupo?status=expense_added");
         } else {
-            header("Location: " . BASE_URL . "group/view/$id_grupo?error=create_failed"); // CORRIGIDO
+            header("Location: " . BASE_URL . "group/view/$id_grupo?error=create_failed");
         }
         exit;
     }
-
     public function getDetails($id_despesa)
     {
         $expenseModel = new Expense($this->db);
@@ -176,11 +181,12 @@ class ExpenseController
         header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
 
         if (!$despesa || $despesa['id_pagador'] != $this->user_id) {
-            header("Location: ../../dashboard?error=not_allowed_edit");
+            header("Location: " . BASE_URL . "dashboard?error=not_allowed_edit");
             exit;
         }
 
         $groupModel = new Group($this->db);
+        $grupo = $groupModel->getGroupById($despesa['id_grupo']);
         $membros = $groupModel->getMembersByGroup($despesa['id_grupo']);
         $splits_atuais = $expenseModel->getExpenseSplits($id_despesa);
 
@@ -333,7 +339,7 @@ class ExpenseController
                 return "Erro: Tipo de ficheiro não permitido (apenas JPG, PNG, GIF).";
             }
 
-            $upload_dir = '../public/uploads/recibos/';
+            $upload_dir = 'uploads/recibos/';
 
             $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             $unique_filename = md5(time() . uniqid()) . '.' . $file_extension;

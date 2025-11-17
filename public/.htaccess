@@ -2,6 +2,11 @@
 RewriteEngine On
 RewriteBase /GitHub/MoneyGuard-poo2/public/
 
+# --- LINHA ADICIONADA ---
+# Se o URL começar com 'uploads/', não faça nada ([L] = Last rule)
+RewriteRule ^uploads/.*$ - [L]
+# --- FIM DA LINHA ADICIONADA ---
+
 # Se o arquivo ou diretório solicitado não existir...
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -122,7 +122,6 @@ require_once '../views/components/footer.php';
 
     document.addEventListener('DOMContentLoaded', function () {
         <?php if (isset($grupos) && empty($grupos)): ?>
-            // Se não há grupos, força a abertura do modal principal
             showModal('noGroupsModal');
         <?php endif; ?>
 
@@ -130,8 +129,6 @@ require_once '../views/components/footer.php';
             overlay.addEventListener('click', function (e) {
                 if (e.target === overlay) {
 
-                    // CORREÇÃO: Não deixa fechar o modal 'noGroupsModal'
-                    // O usuário é FORÇADO a Criar ou Entrar em um grupo.
                     if (overlay.id !== 'noGroupsModal') {
                         closeModal(overlay.id);
                     }

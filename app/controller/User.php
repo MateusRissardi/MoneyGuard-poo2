@@ -6,7 +6,6 @@ require_once '../app/model/Group.php';
 class UserController
 {
 
-
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -53,7 +52,6 @@ class UserController
         header("Location: login");
         exit;
     }
-
 
     public function register()
     {
@@ -107,6 +105,75 @@ class UserController
         } else {
             require_once '../views/pages/register.php';
         }
+    }
+
+    public function settings()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: " . BASE_URL . "login?error=auth");
+            exit;
+        }
+
+        $userModel = new User(Database::getInstance()->getConnection());
+        $user = $userModel->getUserById($_SESSION['user_id']);
+
+        require_once '../app/model/Group.php';
+        $groupModel = new Group(Database::getInstance()->getConnection());
+        $sidebar_grupos = $groupModel->getGroupsByUser($_SESSION['user_id']);
+
+        require_once '../views/pages/settings.php';
+    }
+
+    public function update()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_id'])) {
+            header("Location: " . BASE_URL . "dashboard");
+            exit;
+        }
+
+        $id_usuario = $_SESSION['user_id'];
+        $tipo = $_POST['type'];
+        $data = [];
+
+        if ($tipo === 'nome') {
+            $data['nome'] = $_POST['nome'];
+            $_SESSION['user_name'] = $data['nome'];
+        } elseif ($tipo === 'email') {
+            $data['email'] = $_POST['email'];
+            $_SESSION['user_email'] = $data['email'];
+        } elseif ($tipo === 'senha') {
+            if ($_POST['senha'] === $_POST['confirma_senha']) {
+                $data['senha'] = $_POST['senha'];
+            } else {
+                header("Location: " . BASE_URL . "settings?error=" . urlencode("As senhas não coincidem."));
+                exit;
+            }
+        }
+
+        $userModel = new User(Database::getInstance()->getConnection());
+        if ($userModel->update($id_usuario, $data)) {
+            header("Location: " . BASE_URL . "settings?status=updated");
+        } else {
+            header("Location: " . BASE_URL . "settings?error=update_failed");
+        }
+        exit;
+    }
+
+    public function deleteAccount()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_id'])) {
+            header("Location: " . BASE_URL . "dashboard");
+            exit;
+        }
+
+        $userModel = new User(Database::getInstance()->getConnection());
+        if ($userModel->delete($_SESSION['user_id'])) {
+            session_destroy();
+            header("Location: " . BASE_URL . "login?status=account_deleted");
+        } else {
+            header("Location: " . BASE_URL . "settings?error=delete_failed");
+        }
+        exit;
     }
 }
 ?>

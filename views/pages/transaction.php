@@ -12,7 +12,6 @@ foreach ($transacoes_simplificadas as $transacao) {
 ?>
 
 <style>
-    /* ... (os estilos que já lá estavam) ... */
     .transfer-item {
         display: flex;
         align-items: center;
@@ -22,8 +21,7 @@ foreach ($transacoes_simplificadas as $transacao) {
         transition: background-color 0.2s;
     }
     .transfer-item:last-child { border-bottom: none; }
-    
-    /* Adiciona cursor de clique apenas nas MINHAS dívidas */
+
     .transfer-item.clickable:hover {
         background-color: #2C2C2E;
         cursor: pointer;
@@ -46,14 +44,14 @@ foreach ($transacoes_simplificadas as $transacao) {
 
 <div class="list-section">
     <div class="list-section-header">
-        <h2>Pagar dívidas (RF-ORG18)</h2>
+        <h2>Pagar dívidas</h2>
 
         <?php if ($minhas_dividas_existem): ?>
             <form action="settlement/create_all_my_debts" method="POST"
                   onsubmit="return confirm('Tem a certeza que deseja pagar todas as suas dívidas de uma vez?');">
                 <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
                 <button type="submit" class="btn-add">
-                    Pagar todas as dívidas
+                    0
                 </button>
             </form>
         <?php else: ?>

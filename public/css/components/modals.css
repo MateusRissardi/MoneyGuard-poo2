@@ -118,7 +118,6 @@
     color: #fff !important;
 }
 
-
 #modal-add-expense .modal-content,
 #modal-manage-members .modal-content,
 #modal-add-settlement .modal-content {
@@ -144,7 +143,7 @@
 
 #modal-add-expense label,
 #modal-manage-members label,
-#modal-add-settlement label{
+#modal-add-settlement label, label{
     color: #aaa !important;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;

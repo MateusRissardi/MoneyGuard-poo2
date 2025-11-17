@@ -28,7 +28,8 @@ class SettlementController
 
         $id_grupo = $_POST['id_grupo'];
         $id_credor = $_POST['id_credor'];
-        $valor = $_POST['valor'];
+        $valor_str = preg_replace("/[^0-9,]/", "", $_POST['valor']);
+        $valor = (float) str_replace(',', '.', $valor_str);
         $data_pagamento = $_POST['data_pagamento'];
         $id_devedor = $this->user_id;
 
@@ -122,7 +123,7 @@ class SettlementController
                     $id_devedor_logado,
                     $transacao['credor_id'],
                     $transacao['valor'],
-                    date('Y-m-d') // Usa a data de hoje
+                    date('Y-m-d')
                 );
 
                 if ($result) {

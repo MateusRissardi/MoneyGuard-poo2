@@ -22,8 +22,8 @@ require_once '../views/components/auth_header.php';
                         <label for="data_nascimento">Data de Nascimento</label>
                         <div class="input-wrapper">
                             <i class="fa fa-calendar input-icon"></i>
-                            <input type="data_nascimento" id="data_nascimento" name="data_nascimento"
-                                placeholder="Digite sua data de nascimento" required>
+                            <input type="date" id="data_nascimento" name="data_nascimento" required
+                                style="color-scheme: dark;">
                         </div>
                     </div>
 
@@ -54,7 +54,7 @@ require_once '../views/components/auth_header.php';
                 </form>
 
                 <div class="form-options text-center">
-                    <a href="login" class="form-link">Já possui uma conta? <span
+                    <a href="login" class="form-link">Já possui uma conta?<span
                             style="color: var(--color-primary)">Faça login</span></a>
                 </div>
 

@@ -36,16 +36,37 @@
     border-color: var(--color-text);
 }
 
-i{
+i {
     font-size: 1rem;
 }
 
-.liquid-glass{
-    background: rgba(255, 255, 255, 0.07); 
-    background-blend-mode: linear_dodge; 
+.liquid-glass {
+    background: rgba(255, 255, 255, 0.07);
+    background-blend-mode: linear_dodge;
     box-shadow: 0.06px -0.06px 4.6px rgba(255, 255, 255, 0.13) inset;
-    border-radius: 20px; 
-    outline: 1px white solid; 
+    border-radius: 20px;
+    outline: 1px white solid;
     backdrop-filter: blur(7.58px);
     border: none !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+input[type="date"] {
+    -moz-appearance: textfield;
+}
+
+.input-wrapper input[type="date"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--color-text);
+}
+
+input[type="date"] {
+    color-scheme: dark;
 }

@@ -35,7 +35,7 @@ class User
     {
         try {
             if ($this->findByEmail($email)) {
-                return "E-mail já cadastrado."; // (MSG24)
+                return "E-mail já cadastrado.";
             }
 
             $senha_hash = password_hash($senha, PASSWORD_BCRYPT);
@@ -89,6 +89,47 @@ class User
             error_log("Erro ao salvar último grupo: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function getUserById($id_usuario)
+    {
+        $query = 'SELECT * FROM "User" WHERE id_usuario = :id';
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['id' => $id_usuario]);
+        return $stmt->fetch();
+    }
+
+    public function update($id_usuario, $data)
+    {
+        $fields = [];
+        $params = ['id' => $id_usuario];
+
+        if (!empty($data['nome'])) {
+            $fields[] = 'nome = :nome';
+            $params['nome'] = $data['nome'];
+        }
+        if (!empty($data['email'])) {
+            $fields[] = 'email = :email';
+            $params['email'] = $data['email'];
+        }
+        if (!empty($data['senha'])) {
+            $fields[] = 'senha_hash = :senha';
+            $params['senha'] = password_hash($data['senha'], PASSWORD_DEFAULT);
+        }
+
+        if (empty($fields))
+            return false;
+
+        $query = 'UPDATE "User" SET ' . implode(', ', $fields) . ' WHERE id_usuario = :id';
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute($params);
+    }
+
+    public function delete($id_usuario)
+    {
+        $query = 'DELETE FROM "User" WHERE id_usuario = :id';
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute(['id' => $id_usuario]);
     }
 }
 ?>

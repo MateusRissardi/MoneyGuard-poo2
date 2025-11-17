@@ -1,0 +1,54 @@
+ .group-card-content {
+     text-align: left;
+     padding: 1.5rem;
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+     align-items: flex-start;
+ }
+
+ .group-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 10px;
+     width: 100%;
+ }
+
+ .group-title {
+     margin: 0;
+     color: var(--color-text);
+     font-size: 1.2rem;
+     font-weight: bold;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
+
+ .badge-role {
+     padding: 4px 8px;
+     border-radius: 6px;
+     font-size: 0.75rem;
+     font-weight: bold;
+     text-transform: uppercase;
+     white-space: nowrap;
+ }
+
+ .badge-admin {
+     background-color: var(--color-primary);
+     color: #000;
+ }
+
+ .badge-member {
+     background-color: #333;
+     color: #aaa;
+     border: 1px solid #444;
+ }
+
+ .group-meta {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     color: var(--color-text-secondary);
+     font-size: 0.9rem;
+ }

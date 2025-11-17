@@ -20,7 +20,7 @@
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
     border-radius: 20px;
-    background: radial-gradient(ellipse 50.00% 50.00% at 50.00% 50.00%, #1E1E2A 0%, #0E0E15 100%); 
+    background: radial-gradient(ellipse 50.00% 50.00% at 50.00% 50.00%, #1E1E2A 0%, #0E0E15 100%);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -64,7 +64,7 @@
     color: var(--color-text-secondary);
     text-decoration: none;
     white-space: nowrap;
-    
+
 }
 
 .nav-link:hover,
@@ -149,39 +149,58 @@
     border-radius: 50px;
 }
 
-.bi, span {
+.bi,
+span {
     padding-left: 11px;
 }
+
 .sidebar-submenu {
-        padding-left: 1rem; 
-        display: none;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: -10px; 
-        margin-bottom: 10px; 
+    padding-left: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
-a.nav-link.active + .sidebar-submenu {
-display: flex;
+
+a.nav-link.active+.sidebar-submenu {
+    display: flex;
 }
+
+a.nav-link.active+.sidebar-submenu,
+.sidebar-submenu.submenu-open {
+    max-height: 500px;
+    opacity: 1;
+}
+
 .nav-link-sub {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--color-text-secondary);
-        font-size: 0.9rem;
-        white-space: nowrap;
-    }
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
 
-    .nav-link-sub:hover,
-    .nav-link-sub.active-sub {
-        color: var(--color-primary); 
-        font-weight: 500;
-    }
+.nav-link-sub:hover,
+.nav-link-sub.active-sub {
+    color: var(--color-primary);
+    font-weight: 500;
+}
 
-    .nav-link-sub i {
-        font-size: 0.7rem; 
-    }
+.nav-link-sub i {
+    font-size: 0.7rem;
+}
 
-    .sidebar.closed .sidebar-submenu {
-        display: none;
-    }
+.sidebar.closed .sidebar-submenu {
+    display: none;
+}
+
+.bi,
+span {
+    padding-left: 11px;
+}

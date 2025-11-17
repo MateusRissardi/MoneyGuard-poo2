@@ -68,7 +68,7 @@ switch (true) {
 
     case (preg_match('/^expense\/edit\/(\d+)$/', $url, $matches)):
         $controller = new ExpenseController();
-        $controller->edit($matches[1]); // Passa o ID da despesa
+        $controller->edit($matches[1]);
         break;
 
     case ($url == 'expense/update'):
@@ -129,6 +129,21 @@ switch (true) {
     case ($url == 'recent_activities'):
         $controller = new GroupController();
         $controller->activities();
+        break;
+
+    case ($url == 'settings'):
+        $controller = new UserController();
+        $controller->settings();
+        break;
+
+    case ($url == 'user/update'):
+        $controller = new UserController();
+        $controller->update();
+        break;
+
+    case ($url == 'user/delete'):
+        $controller = new UserController();
+        $controller->deleteAccount();
         break;
 
     case ($url == ''):

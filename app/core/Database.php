@@ -24,7 +24,6 @@ class Database
         }
     }
 
-    //  Pega a instância da conexão (Singleton)
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -33,13 +32,11 @@ class Database
         return self::$instance;
     }
 
-    // Retorna o objeto de conexão PDO
     public function getConnection()
     {
         return $this->conn;
     }
 
-    // Previne clonagem (Singleton)
     private function __clone()
     {
     }

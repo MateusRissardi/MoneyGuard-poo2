@@ -17,10 +17,9 @@ require_once '../app/model/Group.php';
 try {
     $db_sidebar = Database::getInstance()->getConnection();
     $groupModel_sidebar = new Group($db_sidebar);
-    // Busca os grupos do usuário logado
     $sidebar_grupos = $groupModel_sidebar->getGroupsByUser($_SESSION['user_id']);
 } catch (PDOException $e) {
-    $sidebar_grupos = []; 
+    $sidebar_grupos = [];
     error_log("Erro ao buscar grupos para o sidebar: " . $e->getMessage());
 }
 ?>
@@ -40,30 +39,22 @@ try {
 </head>
 
 <body>
-    <?php 
-        require_once '../views/components/sidebar.php' 
-    ?>
+    <?php
+    require_once '../views/components/sidebar.php'
+        ?>
     <div class="main-content-wrapper">
 
         <header>
             <?php if (isset($grupo) && is_array($grupo)): ?>
-                <h3 style="color: var(--color-text) !important">Painel do Grupo: <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3>
+                <h3 style="color: var(--color-text) !important">Painel do Grupo:
+                    <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3>
             <?php else: ?>
                 <h2 style="color: var(--color-primary) !important">MoneyGuard</h2>
             <?php endif; ?>
-            
+
             <nav>
                 <h5 style="font-weight: normal;">Olá, <?php echo htmlspecialchars($user_name); ?>!</h5>
             </nav>
         </header>
-
-        <script>
-            console.log("--- DEBUG DO HEADER ---");
-            // Este log mostra o que o PHP viu QUANDO A PÁGINA CARREGOU
-            console.log("Variável $grupo está definida? <?php echo isset($grupo) && is_array($grupo) ? 'Sim' : 'Não'; ?>");
-            console.log("Nome do Grupo (se definido): <?php echo isset($grupo) ? htmlspecialchars($grupo['nome_grupo']) : 'N/A'; ?>");
-            console.log("URL Atual: <?php echo htmlspecialchars($_GET['url'] ?? 'dashboard'); ?>");
-            console.log("--- FIM DO DEBUG ---");
-        </script>
         <hr>
         <main>

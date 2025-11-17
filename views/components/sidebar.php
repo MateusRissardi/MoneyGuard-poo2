@@ -1,5 +1,7 @@
 <?php
 $current_url = $_GET['url'] ?? 'dashboard';
+
+$is_group_page = str_starts_with($current_url, 'group/') || $current_url == 'groups';
 ?>
 
 <aside class="sidebar" id="sidebar">
@@ -10,48 +12,55 @@ $current_url = $_GET['url'] ?? 'dashboard';
     </div>
 
     <nav class="sidebar-nav">
-        
-        <a href="dashboard" class="nav-link <?php if ($current_url == 'dashboard' || str_starts_with($current_url, 'group/')) echo 'active'; ?>">
+
+        <a href="dashboard" class="nav-link <?php if ($current_url == 'dashboard' || str_starts_with($current_url, 'group/'))
+            echo 'active'; ?>">
             <i class="bi bi-house-door-fill"></i>
             <span>Dashboard</span>
         </a>
 
-        <a href="transaction" class="nav-link <?php if ($current_url == 'transaction') echo 'active'; ?>">
+        <a href="transaction" class="nav-link <?php if ($current_url == 'transaction')
+            echo 'active'; ?>">
             <i class="bi bi-cash-coin"></i>
             <span>Transação</span>
         </a>
-        <a href="recent_activities" class="nav-link" <?php if ($current_url == 'recent_activities') echo 'active'; ?>">
+        <a href="recent_activities" class="nav-link <?php if ($current_url == 'recent_activities')
+            echo 'active'; ?>">
             <i class="bi bi-arrow-counterclockwise"></i>
             <span>Atividades Recentes</span>
         </a>
 
-        <a href="groups" class="nav-link <?php if ($current_url == 'groups') echo 'active'; ?>">
+        <a href="groups" class="nav-link <?php if ($current_url == 'groups')
+            echo 'active'; ?>">
             <i class="bi bi-people-fill"></i>
             <span>Grupos</span>
         </a>
 
-        <div class="sidebar-submenu" style="<?php if (str_starts_with($current_url, 'group/')) echo 'display: flex;'; ?>">
+        <div class="sidebar-submenu <?php if ($is_group_page)
+            echo 'submenu-open'; ?>">
             <?php
             if (!empty($sidebar_grupos)):
-                foreach ($sidebar_grupos as $sidebar_grupo): 
-                    $is_active_group = ($current_url == 'group/view/' . $sidebar_grupo['id_grupo']);
-            ?>
-                    <a href="group/view/<?php echo $sidebar_grupo['id_grupo']; ?>" class="nav-link-sub <?php if ($is_active_group) echo 'active-sub'; ?>">
-                        <i class="bi bi-circle"></i> 
+                foreach ($sidebar_grupos as $sidebar_grupo):
+                    $is_active_group_link = ($current_url == 'group/view/' . $sidebar_grupo['id_grupo']);
+                    ?>
+                    <a href="group/view/<?php echo $sidebar_grupo['id_grupo']; ?>" class="nav-link-sub <?php if ($is_active_group_link)
+                           echo 'active-sub'; ?>">
+                        <i class="bi bi-circle"></i>
                         <span><?php echo htmlspecialchars($sidebar_grupo['nome_grupo']); ?></span>
                     </a>
-            <?php
+                    <?php
                 endforeach;
             endif;
             ?>
 
-            <a href="groups#create" class="nav-link-sub"> 
-                <i class="bi bi-plus-circle"></i> 
+            <a href="groups#create" class="nav-link-sub">
+                <i class="bi bi-plus-circle"></i>
                 <span>Criar um novo grupo</span>
             </a>
         </div>
-        
-        <a href="#" class="nav-link">
+
+        <a href="settings" class="nav-link <?php if ($current_url == 'settings')
+            echo 'active'; ?>">
             <i class="bi bi-gear-fill"></i>
             <span>Configuração</span>
         </a>
