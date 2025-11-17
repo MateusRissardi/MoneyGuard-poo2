@@ -35,7 +35,7 @@ class User
     {
         try {
             if ($this->findByEmail($email)) {
-                return "E-mail já cadastrado.";
+                return "E-mail já cadastrado."; // (MSG24)
             }
 
             $senha_hash = password_hash($senha, PASSWORD_BCRYPT);

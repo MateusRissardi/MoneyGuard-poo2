@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASE_URL', '/MoneyGuard-poo2/public/');
+define('BASE_URL', '/GitHub/MoneyGuard-poo2/public/');
 
 require_once '../app/core/Database.php';
 require_once '../app/controller/User.php';
@@ -134,11 +134,6 @@ switch (true) {
     case ($url == 'recent_activities'):
         $controller = new GroupController();
         $controller->activities();
-        break;
-
-    case ($url == 'settings'):
-        $controller = new UserController();
-        $controller->settings();
         break;
 
     case ($url == 'user/update'):

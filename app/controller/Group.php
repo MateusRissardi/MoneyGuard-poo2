@@ -112,17 +112,20 @@ class GroupController
     public function settings($id_grupo)
     {
         $groupModel = new Group($this->db);
-
+        
         if (!$groupModel->isUserMember($id_grupo, $this->user_id)) {
-            header("Location: " . BASE_URL . "dashboard?error=not_member");
+            header("Location: " . BASE_URL . "dashboard");
             exit;
         }
 
         $grupo = $groupModel->getGroupById($id_grupo);
         $membros = $groupModel->getMembersByGroup($id_grupo);
+        
+        $sidebar_grupos = $groupModel->getGroupsByUser($this->user_id);
+        
         $meu_id = $this->user_id;
 
-        require_once '../views/pages/settings.php';
+        require_once '../views/pages/group_settings.php';
     }
 
     public function addMember()

@@ -114,14 +114,14 @@ class UserController
             exit;
         }
 
-        $userModel = new User(Database::getInstance()->getConnection());
+        $db = Database::getInstance()->getConnection();
+        $userModel = new User($db);
         $user = $userModel->getUserById($_SESSION['user_id']);
 
-        require_once '../app/model/Group.php';
-        $groupModel = new Group(Database::getInstance()->getConnection());
+        $groupModel = new Group($db);
         $sidebar_grupos = $groupModel->getGroupsByUser($_SESSION['user_id']);
 
-        require_once '../views/pages/settings.php';
+        require_once '../views/pages/group_settings.php';
     }
 
     public function update()

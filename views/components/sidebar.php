@@ -59,7 +59,7 @@ $is_group_page = str_starts_with($current_url, 'group/') || $current_url == 'gro
             </a>
         </div>
 
-        <a href="settings" class="nav-link <?php if ($current_url == 'settings')
+        <a href="group/settings/<?php echo $sidebar_grupo['id_grupo'] ?>" class="nav-link <?php if ($current_url == 'group/settings/')
             echo 'active'; ?>">
             <i class="bi bi-gear-fill"></i>
             <span>Configuração</span>
