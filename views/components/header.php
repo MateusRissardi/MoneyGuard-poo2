@@ -22,6 +22,16 @@ try {
     $sidebar_grupos = [];
     error_log("Erro ao buscar grupos para o sidebar: " . $e->getMessage());
 }
+$current_url = $_GET['url'] ?? ''; 
+
+$rotas_sem_header = [
+    'transaction',       
+    'recent_activities', 
+    'groups',            
+    'settings'           
+];
+
+$exibir_header = !in_array($current_url, $rotas_sem_header) && !str_starts_with($current_url, 'group/settings/');
 ?>
 
 <!DOCTYPE html>
@@ -44,17 +54,24 @@ try {
         ?>
     <div class="main-content-wrapper">
 
-        <header>
-            <?php if (isset($grupo) && is_array($grupo)): ?>
-                <h3 style="color: var(--color-text) !important">Painel do Grupo:
-                    <?php echo htmlspecialchars($grupo['nome_grupo']); ?></h3>
-            <?php else: ?>
-                <h2 style="color: var(--color-primary) !important">MoneyGuard</h2>
-            <?php endif; ?>
+<?php
+        if ($exibir_header):
+            ?>
+            <header>
+                <?php if (isset($grupo) && is_array($grupo) && str_starts_with($current_url, 'group/view/')): ?>
+                    <h3 style="color: var(--color-text) !important">Painel do Grupo:
+                        <?php echo htmlspecialchars($grupo['nome_grupo']); ?>
+                    </h3>
+                <?php else: ?>
+                    <h2 style="color: var(--color-primary) !important">MoneyGuard</h2>
+                <?php endif; ?>
 
-            <nav>
-                <h5 style="font-weight: normal;">Olá, <?php echo htmlspecialchars($user_name); ?>!</h5>
-            </nav>
-        </header>
-        <hr>
+                <nav>
+                    <h5 style="font-weight: normal;">Olá, <?php echo htmlspecialchars($user_name); ?>!</h5>
+                </nav>
+            </header>
+            <hr>
+            <?php
+        endif;
+        ?>
         <main>

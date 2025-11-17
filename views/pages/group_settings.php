@@ -49,9 +49,9 @@ require_once '../views/components/header.php';
     }
 
     .config-subtitle {
-        color: var(--color-text-secondary);
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
+        color: var(--color-text-secondary) !important;
+        font-size: 16px;
+        margin-bottom: 1rem !important;
     }
 
     .config-input-group {
@@ -144,10 +144,6 @@ require_once '../views/components/header.php';
 <div class="config-page-wrapper">
 
     <div class="config-header">
-        <a href="<?php echo BASE_URL; ?>group/view/<?php echo $grupo['id_grupo']; ?>" class="back-link"
-            title="Voltar ao Grupo">
-            <i class="bi bi-arrow-left-circle-fill"></i>
-        </a>
         <h3 class="config-header-title"><?php echo htmlspecialchars($grupo['nome_grupo']); ?>: Configuração</h3>
     </div>
 
