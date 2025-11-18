@@ -6,7 +6,7 @@
     box-shadow: -0.03px -0.06px 4.6px rgba(255, 255, 255, 0.13) inset;
     border-radius: 50px;
     outline: 1px white solid;
-    backdrop-filter: blur(7.5px);
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,14 +81,14 @@
     font-size: 1.5rem;
 }
 
-.btn-add {
+ .btn-add {
     background: var(--color-primary) !important;
     color: #000 !important;
     padding: 10px 15px;
-    border-radius: 8px;
+    border-radius: 20px !important;
     text-decoration: none;
     font-weight: bold;
-}
+} 
 
 .btn-add:hover {
     background: #f0b90b !important;
@@ -161,9 +161,17 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: #555;
+    background: linear-gradient(135deg, #FFD84D, #E1A600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
     margin-right: 15px;
-    /* Placeholder */
+    box-shadow: 0 0 10px rgba(255, 208, 0, 0.4);
+    user-select: none;
 }
 
 .member-details {

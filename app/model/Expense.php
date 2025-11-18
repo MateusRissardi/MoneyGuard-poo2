@@ -46,7 +46,6 @@ class Expense
 
             $this->conn->commit();
             return true;
-
         } catch (PDOException $e) {
             $this->conn->rollBack();
             return false;
@@ -197,7 +196,6 @@ class Expense
 
             $this->conn->commit();
             return true;
-
         } catch (PDOException $e) {
             $this->conn->rollBack();
             return "Erro ao atualizar despesa: " . $e->getMessage();
@@ -227,7 +225,6 @@ class Expense
 
             $this->conn->commit();
             return true;
-
         } catch (PDOException $e) {
             $this->conn->rollBack();
             return "Erro ao excluir despesa: " . $e->getMessage();
@@ -245,11 +242,18 @@ class Expense
         foreach ($saldos_atuais as $saldo_usuario) {
             $saldo = $saldo_usuario['total_credito'] - $saldo_usuario['total_debito'];
 
-
             if ($saldo > 0.01) {
-                $credores[] = ['id' => $saldo_usuario['id_usuario'], 'nome' => $saldo_usuario['nome'], 'saldo' => $saldo];
+                $credores[] = [
+                    'id' => $saldo_usuario['id_usuario'],
+                    'nome' => $saldo_usuario['nome'],
+                    'saldo' => $saldo
+                ];
             } elseif ($saldo < -0.01) {
-                $devedores[] = ['id' => $saldo_usuario['id_usuario'], 'nome' => $saldo_usuario['nome'], 'saldo' => abs($saldo)];
+                $devedores[] = [
+                    'id' => $saldo_usuario['id_usuario'],
+                    'nome' => $saldo_usuario['nome'],
+                    'saldo' => abs($saldo)
+                ];
             }
         }
 
@@ -297,4 +301,3 @@ class Expense
         return $splits;
     }
 }
-?>

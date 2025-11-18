@@ -5,22 +5,32 @@ require_once '../views/components/header.php';
 function getCategoryIcon($categoria)
 {
     switch (strtolower($categoria)) {
-        case 'moradia': return '<i class="bi bi-collection"></i>';
-        case 'alimentação': return '<i class="bi bi-basket"></i>';
-        case 'transporte': return '<i class="bi bi-bus-front-fill"></i>';
-        case 'lazer': return '<i class="bi bi-tree-fill"></i>';
-        default: return '<i class="bi bi-coin"></i>';
+        case 'moradia':
+            return '<i class="bi bi-collection"></i>';
+        case 'alimentação':
+            return '<i class="bi bi-basket"></i>';
+        case 'transporte':
+            return '<i class="bi bi-bus-front-fill"></i>';
+        case 'lazer':
+            return '<i class="bi bi-tree-fill"></i>';
+        default:
+            return '<i class="bi bi-coin"></i>';
     }
 }
 
 function getCategoryColorClass($categoria)
 {
     switch (strtolower($categoria)) {
-        case 'moradia': return 'icon-moradia';
-        case 'alimentação': return 'icon-alimentacao';
-        case 'transporte': return 'icon-transporte';
-        case 'lazer': return 'icon-lazer';
-        default: return 'icon-outros';
+        case 'moradia':
+            return 'icon-moradia';
+        case 'alimentação':
+            return 'icon-alimentacao';
+        case 'transporte':
+            return 'icon-transporte';
+        case 'lazer':
+            return 'icon-lazer';
+        default:
+            return 'icon-outros';
     }
 }
 // ----------------------
@@ -31,14 +41,14 @@ $meu_id = $_SESSION['user_id'];
 $atividades = [];
 
 foreach ($despesas as $d) {
-    $atividades[] = [ 'tipo' => 'despesa', 'data_ordenacao' => $d['data_despesa'], 'dados' => $d ];
+    $atividades[] = ['tipo' => 'despesa', 'data_ordenacao' => $d['data_despesa'], 'dados' => $d];
 }
 foreach ($acertos as $a) {
-    $atividades[] = [ 'tipo' => 'acerto', 'data_ordenacao' => $a['data_pagamento'], 'dados' => $a ];
+    $atividades[] = ['tipo' => 'acerto', 'data_ordenacao' => $a['data_pagamento'], 'dados' => $a];
 }
 foreach ($entradas_membros as $e) {
-    if ($e['nome'] != $_SESSION['user_name']) { 
-        $atividades[] = [ 'tipo' => 'entrada', 'data_ordenacao' => $e['data_entrada'], 'dados' => $e ];
+    if ($e['nome'] != $_SESSION['user_name']) {
+        $atividades[] = ['tipo' => 'entrada', 'data_ordenacao' => $e['data_entrada'], 'dados' => $e];
     }
 }
 
@@ -53,17 +63,17 @@ $mes_atual = '';
 <div class="list-section">
     <div class="list-section-header">
         <h2><?php echo htmlspecialchars($grupo['nome_grupo']); ?>: Atividades Recentes</h2>
-        
+
         <a href="#" class="btn-add" onclick="openModal('modal-filter'); return false;">
-           Filtrar <?php if($filtros_ativos) echo '(Ativo)'; ?>
+            Filtrar <?php if ($filtros_ativos) echo '(Ativo)'; ?>
         </a>
     </div>
 
     <?php if (empty($atividades)): ?>
-        <p>Nenhuma atividade encontrada<?php if($filtros_ativos) echo ' para o filtro selecionado'; ?>.</p>
+        <p>Nenhuma atividade encontrada<?php if ($filtros_ativos) echo ' para o filtro selecionado'; ?>.</p>
     <?php else: ?>
         <?php foreach ($atividades as $atividade): ?>
-            
+
             <?php
             // Divisor de Mês
             $data = new DateTime($atividade['data_ordenacao']);
@@ -76,30 +86,30 @@ $mes_atual = '';
 
             <?php if ($atividade['tipo'] == 'despesa'): $item = $atividade['dados']; ?>
                 <div class="transaction-item" style="cursor: pointer;"
-                     onclick="openEditModal(<?php echo $item['id_despesa']; ?>)">
-                    
+                    onclick="openEditModal(<?php echo $item['id_despesa']; ?>)">
+
                     <div class="transaction-icon <?php echo getCategoryColorClass($item['categoria']); ?>">
                         <?php echo getCategoryIcon($item['categoria']); ?>
                     </div>
-                    
+
                     <div class="transaction-details">
                         <div class="title"><?php echo htmlspecialchars($item['descricao']); ?></div>
                         <div class="subtitle">
-                            Pago por <?php echo htmlspecialchars($item['nome_pagador']); ?>, 
+                            Pago por <?php echo htmlspecialchars($item['nome_pagador']); ?>,
                             <?php echo date('d \d\e M', strtotime($item['data_despesa'])); ?>
 
                             <?php if (!empty($item['url_recibo'])): ?>
-                                - <a href="<?php echo htmlspecialchars($item['url_recibo']); ?>" target="_blank" 
-                                     style="color: var(--color-primary); font-weight: bold;"
-                                     onclick="event.stopPropagation();"> Ver Recibo
-                                  </a>
+                                - <a href="<?php echo htmlspecialchars($item['url_recibo']); ?>" target="_blank"
+                                    style="color: var(--color-primary); font-weight: bold;"
+                                    onclick="event.stopPropagation();"> Ver Recibo
+                                </a>
                             <?php endif; ?>
                         </div>
                     </div>
-                    
+
                     <div class="transaction-amount">
                         <div class="total">R$ <?php echo number_format($item['valor_total'], 2, ',', '.'); ?></div>
-                         <?php if (isset($item['valor_devido']) && $item['valor_devido'] > 0 && $item['id_pagador'] != $_SESSION['user_id']): ?>
+                        <?php if (isset($item['valor_devido']) && $item['valor_devido'] > 0 && $item['id_pagador'] != $_SESSION['user_id']): ?>
                             <div class="share">Você deve R$ <?php echo number_format($item['valor_devido'], 2, ',', '.'); ?></div>
                         <?php endif; ?>
                     </div>
@@ -123,9 +133,9 @@ $mes_atual = '';
                 </div>
 
             <?php elseif ($atividade['tipo'] == 'entrada'): $item = $atividade['dados']; ?>
-                 <div class="transaction-item">
+                <div class="transaction-item">
                     <div class="transaction-icon" style="background-color: #333; color: #aaa; border: 1px solid #444;">
-                         <i class="bi bi-person-plus-fill"></i>
+                        <i class="bi bi-person-plus-fill"></i>
                     </div>
                     <div class="transaction-details">
                         <div class="title"><?php echo htmlspecialchars($item['nome']); ?> entrou no grupo</div>
@@ -145,34 +155,34 @@ $mes_atual = '';
     <div class="modal-content" style="max-width: 480px;">
         <span class="modal-close" onclick="closeModal('modal-filter')">&times;</span>
         <h3 style="text-align: center;">Filtrar Atividades</h3>
-        
+
         <form action="recent_activities" method="GET">
             <input type="hidden" name="filtro_submit" value="1">
-            
+
             <div class="form-group">
                 <label>Quem Pagou:</label>
                 <select name="filtro_pagador" class="new-modal-select">
                     <option value="">-- Todos os Membros --</option>
                     <?php foreach ($membros as $membro): ?>
-                        <option value="<?php echo $membro['id_usuario']; ?>" <?php if($filtro_pagador_atual == $membro['id_usuario']) echo 'selected'; ?>>
+                        <option value="<?php echo $membro['id_usuario']; ?>" <?php if ($filtro_pagador_atual == $membro['id_usuario']) echo 'selected'; ?>>
                             <?php echo htmlspecialchars($membro['nome']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label>Categoria (Apenas Despesas):</label>
                 <select name="filtro_categoria" class="new-modal-select">
                     <option value="">-- Todas as Categorias --</option>
-                    <option value="Moradia" <?php if($filtro_categoria_atual == 'Moradia') echo 'selected'; ?>>🏠 Moradia</option>
-                    <option value="Alimentação" <?php if($filtro_categoria_atual == 'Alimentação') echo 'selected'; ?>>🛒 Alimentação</option>
-                    <option value="Transporte" <?php if($filtro_categoria_atual == 'Transporte') echo 'selected'; ?>>🚗 Transporte</option>
-                    <option value="Lazer" <?php if($filtro_categoria_atual == 'Lazer') echo 'selected'; ?>>🎉 Lazer</option>
-                    <option value="Outros" <?php if($filtro_categoria_atual == 'Outros') echo 'selected'; ?>>💰 Outros</option>
+                    <option value="Moradia" <?php if ($filtro_categoria_atual == 'Moradia') echo 'selected'; ?>>🏠 Moradia</option>
+                    <option value="Alimentação" <?php if ($filtro_categoria_atual == 'Alimentação') echo 'selected'; ?>>🛒 Alimentação</option>
+                    <option value="Transporte" <?php if ($filtro_categoria_atual == 'Transporte') echo 'selected'; ?>>🚗 Transporte</option>
+                    <option value="Lazer" <?php if ($filtro_categoria_atual == 'Lazer') echo 'selected'; ?>>🎉 Lazer</option>
+                    <option value="Outros" <?php if ($filtro_categoria_atual == 'Outros') echo 'selected'; ?>>💰 Outros</option>
                 </select>
             </div>
-            
+
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <a href="recent_activities" class="btn btn-primary" style="background: #555 !important; flex: 1; text-align: center;">Limpar</a>
                 <button type="submit" class="btn btn-primary" style="flex: 2;">Aplicar Filtro</button>
@@ -225,7 +235,7 @@ $mes_atual = '';
                     <option value="Outros">💰 Outros</option>
                 </select>
             </div>
-            
+
             <div class="form-group mb-3">
                 <label>Valor Total:</label>
                 <div class="form-group input-wrapper liquid-glass">
@@ -253,7 +263,9 @@ $mes_atual = '';
             <div id="div_equitativa_inputs" class="division-container">
                 <?php foreach ($membros as $membro): ?>
                     <div class="member-checkbox-item">
-                        <div class="member-avatar-small"></div>
+                        <div class="member-avatar">
+                            <?= getInitials($membro['nome']) ?>
+                        </div>
                         <span><?php echo htmlspecialchars($membro['nome']); ?></span>
                         <input type="checkbox" class="expense-divisao-equitativa" name="divisao_equitativa[]"
                             value="<?php echo $membro['id_usuario']; ?>" checked>
@@ -321,13 +333,14 @@ require_once '../views/components/footer.php';
             modal.classList.add('visible');
         }
     }
+
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.remove('visible');
         }
     }
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         if (event.target.classList.contains('modal-overlay')) {
             event.target.classList.remove('visible');
         }
@@ -336,7 +349,7 @@ require_once '../views/components/footer.php';
     function toggleDivisao(tipo) {
         const manualInputs = document.getElementById('div_manual_inputs');
         const equitativaInputs = document.getElementById('div_equitativa_inputs');
-        
+
         if (manualInputs && equitativaInputs) {
             if (tipo === 'manual') {
                 manualInputs.style.display = 'block';
@@ -366,7 +379,7 @@ require_once '../views/components/footer.php';
         const totalInput = document.getElementById('expense-valor-total');
         const manualInputs = document.querySelectorAll('.expense-divisao-manual');
         const infoDisplay = document.getElementById('manual-split-info');
-        
+
         if (!totalInput || manualInputs.length === 0) return;
 
         let totalStr = totalInput.value.replace(/\D/g, '');
@@ -383,8 +396,11 @@ require_once '../views/components/footer.php';
                 let changedVal = changedStr === "" ? 0 : parseInt(changedStr, 10) / 100;
 
                 let remaining = totalVal - changedVal;
-                if (remaining < 0) remaining = 0; 
-                otherInput.value = remaining.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                if (remaining < 0) remaining = 0;
+                otherInput.value = remaining.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
             }
         }
 
@@ -398,11 +414,14 @@ require_once '../views/components/footer.php';
         totalVal = Math.round(totalVal * 100) / 100;
         currentSum = Math.round(currentSum * 100) / 100;
         let diff = totalVal - currentSum;
-        
+
         if (Math.abs(diff) < 0.01) {
             infoDisplay.innerHTML = '<span style="color: var(--color-success);">Soma correta!</span>';
         } else {
-            let diffFmt = Math.abs(diff).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            let diffFmt = Math.abs(diff).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
             if (diff > 0) {
                 infoDisplay.innerHTML = `<span style="color: var(--color-text-secondary);">Falta distribuir: ${diffFmt}</span>`;
             } else {
@@ -414,7 +433,7 @@ require_once '../views/components/footer.php';
     // Abre o modal para "Editar"
     function openEditModal(id_despesa) {
         const BASE_URL = "/MoneyGuard-poo2/public/";
-        
+
         fetch(BASE_URL + `expense/get_details/${id_despesa}`)
             .then(response => response.json())
             .then(data => {
@@ -423,26 +442,32 @@ require_once '../views/components/footer.php';
                     return;
                 }
 
-                const { despesa, splits } = data;
-                
+                const {
+                    despesa,
+                    splits
+                } = data;
+
                 const form = document.getElementById('expense-form');
-                form.action = 'expense/update'; 
+                form.action = 'expense/update';
 
                 document.getElementById('expense-modal-title').textContent = 'Editar Despesa';
                 document.getElementById('expense-modal-submit-btn').textContent = 'Atualizar';
 
                 document.getElementById('expense-id-despesa').value = despesa.id_despesa;
                 document.getElementById('expense-descricao').value = despesa.descricao;
-                
-                let valorFormatado = parseFloat(despesa.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                let valorFormatado = parseFloat(despesa.valor_total).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
                 document.getElementById('expense-valor-total').value = valorFormatado;
-                
+
                 document.getElementById('expense-data-despesa').value = despesa.data_despesa;
                 document.getElementById('expense-categoria').value = despesa.categoria;
                 document.getElementById('expense-id-pagador').value = despesa.id_pagador;
-                
+
                 const labelText = document.getElementById('recibo-label-text');
-                if(labelText) {
+                if (labelText) {
                     labelText.textContent = despesa.url_recibo ? 'Substituir comprovante' : 'Anexar comprovante';
                 }
 
@@ -453,7 +478,10 @@ require_once '../views/components/footer.php';
                     document.querySelectorAll('.expense-divisao-manual').forEach(inp => {
                         const id_part = inp.name.match(/\[(\d+)\]/)[1];
                         let valorSplit = splits[id_part] ? parseFloat(splits[id_part]) : 0;
-                        inp.value = valorSplit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        inp.value = valorSplit.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        });
                     });
                     autoBalanceManual(null);
                 } else {

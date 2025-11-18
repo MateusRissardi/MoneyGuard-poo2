@@ -265,7 +265,9 @@ function getCategoryColorClass($categoria)
         <?php foreach ($saldos as $membro): ?>
             <?php $saldo_membro = $membro['total_credito'] - $membro['total_debito']; ?>
             <div class="member-item">
-                <div class="member-avatar"></div>
+                <div class="member-avatar">
+                    <?= getInitials($membro['nome']) ?>
+                </div>
                 <div class="member-details">
                     <?php echo htmlspecialchars($membro['nome']); ?>
                     <?php if ($membro['id_usuario'] == $grupo['id_admin'])
@@ -373,7 +375,9 @@ function getCategoryColorClass($categoria)
                 <div id="div_equitativa_inputs" class="division-container">
                     <?php foreach ($membros as $membro): ?>
                         <div class="member-checkbox-item">
-                            <div class="member-avatar-small"></div>
+                            <div class="member-avatar">
+                                <?= getInitials($membro['nome']) ?>
+                            </div>
                             <span><?php echo htmlspecialchars($membro['nome']); ?></span>
                             <input type="checkbox" class="expense-divisao-equitativa" name="divisao_equitativa[]"
                                 value="<?php echo $membro['id_usuario']; ?>" checked>

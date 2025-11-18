@@ -1,5 +1,11 @@
 <?php
 
+$user_name = $_SESSION['user_name'];
+
+require_once '../app/core/Database.php';
+require_once '../app/model/Group.php';
+
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -13,6 +19,18 @@ $user_name = $_SESSION['user_name'];
 
 require_once '../app/core/Database.php';
 require_once '../app/model/Group.php';
+
+if (!function_exists('getInitials')) {
+    function getInitials($name) {
+        $parts = explode(" ", trim($name));
+
+        if (count($parts) === 1) {
+            return strtoupper(substr($parts[0], 0, 1));
+        }
+
+        return strtoupper(substr($parts[0], 0, 1) . substr(end($parts), 0, 1));
+    }
+}
 
 try {
     $db_sidebar = Database::getInstance()->getConnection();

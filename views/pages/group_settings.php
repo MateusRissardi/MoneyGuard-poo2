@@ -3,326 +3,344 @@ require_once '../views/components/header.php';
 
 ?>
 <style>
-    .config-page-wrapper {
-        max-width: 800px;
+    .config-container {
+        max-width: 100%;
         margin: 0 auto;
-        padding-bottom: 4rem;
+        padding-bottom: 80px;
     }
 
-    .config-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .config-header-title {
-        color: var(--color-text);
+    .config-title {
         font-size: 1.5rem;
+        color: #fff;
+        margin-bottom: 1.5rem;
         font-weight: 500;
-        margin: 0;
     }
 
-    .back-link {
-        color: var(--color-text-secondary);
-        font-size: 1.5rem;
-        text-decoration: none;
+    .settings-card {
+        background: #0f0f12;
+        border: 1px solid #222;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .back-link:hover {
-        color: var(--color-primary);
+    .section-label {
+        color: #fff;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        display: block;
     }
 
-    .config-section {
-        background: var(--color-card-bg);
-        border: 1px solid var(--color-border);
-        border-radius: 12px;
-        padding: 1.5rem 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .config-section h4 {
-        color: var(--color-text);
-        font-size: 1.2rem;
-        font-weight: 500;
+    .input-label {
+        color: #888;
+        font-size: 0.9rem;
         margin-bottom: 0.5rem;
+        display: block;
     }
 
-    .config-subtitle {
-        color: var(--color-text-secondary) !important;
-        font-size: 16px;
-        margin-bottom: 1rem !important;
+    .custom-input {
+        width: 100%;
+        background-color: #050507;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 50px; 
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s;
     }
 
-    .config-input-group {
+    .custom-input:focus {
+        border-color: var(--color-primary);
+    }
+
+    .custom-input[readonly] {
+        color: #aaa;
+        cursor: default;
+    }
+
+    .btn-action {
+        background-color: var(--color-primary);
+        color: #000;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: 600;
+        cursor: pointer;
+        text-transform: capitalize;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+    }
+
+    .btn-action:hover {
+        opacity: 0.9;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 1px solid var(--color-primary);
+        color: var(--color-primary);
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .btn-outline:hover {
+        background: rgba(217, 164, 4, 0.1);
+    }
+
+    .form-row {
         display: flex;
-        gap: 1rem;
-        align-items: center;
-        max-width: 500px;
+        gap: 15px;
+        align-items: flex-end;
+        margin-bottom: 2.5rem;
     }
 
-    .config-input {
+    .input-wrapper-flex {
         flex-grow: 1;
-        background-color: var(--color-background);
-        border: 1px solid #444;
-        border-radius: 8px;
-        padding: 0.8rem 1rem;
-        color: var(--color-text);
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
     }
 
-    .config-member-list {
-        margin-top: 1.5rem;
+    .member-list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 15px;
+        margin-top: 10px;
     }
 
-    .config-member-item {
+    .member-card {
         display: flex;
         align-items: center;
-        background-color: var(--color-background);
-        padding: 1rem;
-        border-radius: 8px;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #222;
+    }
+    
+    .member-card:last-child {
+        border-bottom: none;
     }
 
-    .config-member-item .member-avatar {
-        width: 40px;
-        height: 40px;
+    .member-info-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .avatar-circle {
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        background-color: #333;
-        margin-right: 1rem;
+        background-color: #222;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #aaa;
+        font-weight: bold;
+        color: #fff;
+        overflow: hidden;
+    }
+    
+    .avatar-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
-    .config-member-item .member-details {
-        flex-grow: 1;
-        font-weight: 500;
-        color: var(--color-text);
+    .member-text h4 {
+        margin: 0;
+        font-size: 1rem;
+        color: #fff;
+        font-weight: normal;
     }
 
-    .member-tag {
-        font-size: 0.8rem;
-        color: var(--color-text-secondary);
-        margin-left: 10px;
-    }
-
-    .member-tag.admin {
+    .member-role {
+        font-size: 0.85rem;
         color: var(--color-primary);
+        margin-top: 2px;
     }
 
-    .config-delete-btn {
+    .btn-delete {
         background: none;
         border: none;
-        color: var(--color-text-secondary);
+        color: var(--color-primary); 
         font-size: 1.2rem;
         cursor: pointer;
+        transition: color 0.2s;
+    }
+    
+    .btn-delete:hover {
+        color: #ff4444;
     }
 
-    .config-delete-btn:hover {
-        color: #E84545;
-    }
-
-    .btn-danger {
-        background: #E84545 !important;
-        border-color: #E84545 !important;
-        color: #fff !important;
-    }
-
-    .config-footer {
-        margin-top: 1.5rem;
+    .card-footer {
+        margin-top: 40px;
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
+        gap: 15px;
+        border-top: 1px solid #222;
+        padding-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .btn-action {
+            width: 100%;
+        }
+        .card-footer {
+            flex-direction: column-reverse;
+        }
+        .card-footer button, .card-footer a {
+            width: 100%;
+            text-align: center;
+        }
     }
 </style>
 
-<div class="config-page-wrapper">
-
-    <div class="config-header">
-        <h3 class="config-header-title"><?php echo htmlspecialchars($grupo['nome_grupo']); ?>: Configuração</h3>
+<div class="config-container">
+    <div class="config-header d-flex align-items-center gap-3 mb-4">
+        <a href="group/view/<?php echo $grupo['id_grupo']; ?>" style="color: #888; font-size: 1.5rem;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 class="config-title mb-0"><?php echo htmlspecialchars($grupo['nome_grupo']); ?>: Configuração</h2>
     </div>
 
-    <?php if (isset($_GET['status']) && $_GET['status'] == 'group_updated'): ?>
-        <div class="alert alert-success" style="margin-bottom: 1rem;">
-            <i class="fa-solid fa-check"></i> Nome do grupo atualizado com sucesso!
-        </div>
-    <?php endif; ?>
+    <div class="auth-messages mb-3">
+        <?php if (isset($_GET['error'])): ?>
+            <div class="alert alert-error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <?php echo htmlspecialchars(urldecode($_GET['error'])); ?>
+            </div>
+        <?php endif; ?>
+        <?php if (isset($_GET['status']) && $_GET['status'] == 'updated'): ?>
+            <div class="alert alert-success">
+                <i class="fa-solid fa-check"></i> Grupo atualizado com sucesso!
+            </div>
+        <?php endif; ?>
+    </div>
 
-    <?php if ($grupo['id_admin'] == $meu_id): ?>
-
-        <form action="<?php echo BASE_URL; ?>group/update" method="POST" class="config-section">
+    <div class="settings-card">
+        
+        <h3 class="section-label">Detalhes do grupo</h3>
+        
+        <form id="formUpdateGroup" action="<?php echo BASE_URL; ?>group/update" method="POST">
             <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-            <h4>Detalhes do grupo</h4>
-            <p class="config-subtitle">Nome do grupo</p>
-            <div class="config-input-group">
-                <input type="text" name="nome_grupo" id="group_name_input" class="config-input"
-                    value="<?php echo htmlspecialchars($grupo['nome_grupo']); ?>" required>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+            
+            <div class="form-row">
+                <div class="input-wrapper-flex">
+                    <label class="input-label">Nome do grupo</label>
+                    <input type="text" name="nome_grupo" id="groupNameInput" 
+                           class="custom-input" 
+                           value="<?php echo htmlspecialchars($grupo['nome_grupo']); ?>" 
+                           readonly>
+                </div>
+                <?php if($grupo['id_admin'] == $_SESSION['user_id']): ?>
+                    <button type="button" id="btnEnableEdit" class="btn-action">Editar</button>
+                <?php endif; ?>
             </div>
         </form>
 
-        <div class="config-section">
-            <h4>Gerenciar membros do grupo</h4>
-
-            <p class="config-subtitle">Gere um novo código de acesso</p>
-            <div class="config-input-group">
-                <input type="text" class="config-input"
-                    value="<?php echo htmlspecialchars($grupo['codigo_convite'] ?? 'Nenhum código gerado'); ?>"
-                    id="config-invite-code-display" readonly>
-                <button type="button" class="btn btn-primary"
-                    onclick="showGenerateCodeModal(<?php echo $grupo['id_grupo']; ?>)">Gerar</button>
+        <h3 class="section-label">Gerenciar membros do grupo</h3>
+        
+        <div class="form-row">
+            <div class="input-wrapper-flex">
+                <label class="input-label">Gere um novo código de acesso</label>
+                <input type="text" id="inviteCodeDisplay" 
+                       class="custom-input" 
+                       value="<?php echo htmlspecialchars($grupo['codigo_convite'] ?? '-----'); ?>" 
+                       readonly>
             </div>
+            <?php if($grupo['id_admin'] == $_SESSION['user_id']): ?>
+                <button type="button" onclick="generateNewCode(<?php echo $grupo['id_grupo']; ?>)" class="btn-action">Gerar</button>
+            <?php endif; ?>
+        </div>
 
-            <div class="config-member-list">
-                <?php foreach ($membros as $membro): ?>
-                    <div class="config-member-item">
-                        <div class="member-avatar"><i class="bi bi-person-fill"></i></div>
-                        <div class="member-details">
-                            <?php echo htmlspecialchars($membro['nome']); ?>
-                            <?php if ($membro['id_usuario'] == $meu_id): ?>
-                                <span class="member-tag">(Você)</span>
-                            <?php endif; ?>
+        <div class="member-list">
+            <?php foreach ($membros as $membro): ?>
+                <div class="member-card">
+                    <div class="member-info-left">
+                        <div class="avatar-circle">
+                             <?= getInitials($membro['nome']) ?>
+                        </div>
+                        
+                        <div class="member-text">
+                            <h4>
+                                <?php echo htmlspecialchars($membro['nome']); ?>
+                                <?php if ($membro['id_usuario'] == $_SESSION['user_id']) echo ' (Você)'; ?>
+                            </h4>
+                            
                             <?php if ($membro['id_usuario'] == $grupo['id_admin']): ?>
-                                <span class="member-tag admin">Admin</span>
+                                <p class="member-role">Admin do Grupo</p>
                             <?php endif; ?>
                         </div>
-
-                        <?php if ($membro['id_usuario'] != $meu_id): ?>
-                            <form action="<?php echo BASE_URL; ?>group/remove_member" method="POST" style="display: inline;"
-                                onsubmit="return confirm('Tem certeza que deseja remover <?php echo htmlspecialchars($membro['nome']); ?>?');">
-                                <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-                                <input type="hidden" name="id_membro" value="<?php echo $membro['id_usuario']; ?>">
-                                <button type="submit" class="config-delete-btn" title="Remover Membro">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </form>
-                        <?php endif; ?>
                     </div>
-                <?php endforeach; ?>
-            </div>
+
+                    <?php if ($grupo['id_admin'] == $_SESSION['user_id'] && $membro['id_usuario'] != $_SESSION['user_id']): ?>
+                        <form action="<?php echo BASE_URL; ?>group/remove_member" method="POST" 
+                              onsubmit="return confirm('Tem certeza que deseja remover este membro?');">
+                            <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
+                            <input type="hidden" name="id_membro" value="<?php echo $membro['id_usuario']; ?>">
+                            <button type="submit" class="btn-delete" title="Remover membro">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
         </div>
 
-        <div class="config-section delete-section" style="border-color: #E84545;">
-            <h4 style="color: #E84545;">Excluir grupo</h4>
-            <p class="config-subtitle">Uma vez excluído, um grupo não pode ser recuperado.</p>
-            <form action="<?php echo BASE_URL; ?>group/delete" method="POST" style="display: inline-block;"
-                onsubmit="return confirm('Tem certeza que deseja excluir este grupo?');">
-                <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-                <button type="submit" class="btn btn-danger">Excluir Grupo</button>
-            </form>
+        <div class="card-footer">
+            <a href="group/view/<?php echo $grupo['id_grupo']; ?>" class="btn-outline" style="text-decoration: none; display: inline-block; text-align:center;">Cancelar</a>
+            
+            <?php if($grupo['id_admin'] == $_SESSION['user_id']): ?>
+                <button type="button" onclick="document.getElementById('formUpdateGroup').submit()" class="btn-action">Salvar</button>
+            <?php endif; ?>
         </div>
 
-    <?php else: ?>
-        <div class="config-section">
-            <h4>Membros do grupo</h4>
-            <p class="config-subtitle">Você não é o admin deste grupo.</p>
-            <div class="config-member-list">
-                <?php foreach ($membros as $membro): ?>
-                    <div class="config-member-item">
-                        <div class="member-avatar"><i class="bi bi-person-fill"></i></div>
-                        <div class="member-details">
-                            <?php echo htmlspecialchars($membro['nome']); ?>
-                            <?php if ($membro['id_usuario'] == $meu_id)
-                                echo '<span class="member-tag">(Você)</span>'; ?>
-                            <?php if ($membro['id_usuario'] == $grupo['id_admin'])
-                                echo '<span class="member-tag admin">Admin</span>'; ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <div class="config-section delete-section">
-            <h4 style="color: #E84545;">Sair do grupo</h4>
-            <p class="config-subtitle">Você pode sair deste grupo a qualquer momento.</p>
-            <form action="<?php echo BASE_URL; ?>group/remove_member" method="POST"
-                onsubmit="return confirm('Tem certeza que deseja sair deste grupo?');">
-                <input type="hidden" name="id_grupo" value="<?php echo $grupo['id_grupo']; ?>">
-                <input type="hidden" name="id_membro" value="<?php echo $meu_id; ?>">
-                <button type="submit" class="btn btn-danger">Sair do Grupo</button>
-            </form>
-        </div>
-    <?php endif; ?>
-
-    <div class="config-footer">
-        <a href="<?php echo BASE_URL; ?>group/view/<?php echo $grupo['id_grupo']; ?>" class="btn btn-secondary"
-            style="background: #333; border: 1px solid #555;">
-            Voltar
-        </a>
-    </div>
-</div>
-
-<div class="modal-overlay" id="generateCodeModal">
-    <div class="modal-content">
-        <div class="modal-header" style="display: flex; justify-content: space-between;">
-            <h4 class="mb-2">Gerar código</h4>
-            <span class="modal-close" onclick="closeModal('generateCodeModal')">&times;</span>
-        </div>
-        <p>Compartilhe o código com novos membros.</p>
-        <div class="inputBtn" style="display: flex; gap: 10px;">
-            <input type="text" id="invite_code_display" value="Gerando..." readonly class="config-input">
-            <button id="copyCodeBtn" type="button" class="btn btn-primary" onclick="copyToClipboard()">Copiar</button>
-        </div>
-        <div id="generateCodeError" class="alert alert-error" style="display: none;"></div>
     </div>
 </div>
 
 <script>
     const BASE_URL = "<?php echo BASE_URL; ?>";
 
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.add('visible');
-    }
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('visible');
-    }
-    window.onclick = function (event) {
-        if (event.target.classList.contains('modal-overlay')) {
-            event.target.classList.remove('visible');
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnEdit = document.getElementById('btnEnableEdit');
+        const inputName = document.getElementById('groupNameInput');
+
+        if(btnEdit && inputName) {
+            btnEdit.addEventListener('click', () => {
+                inputName.readOnly = false;
+                inputName.focus();
+                inputName.style.borderColor = 'var(--color-primary)';
+                btnEdit.style.display = 'none'; 
+            });
         }
-    }
+    });
 
-    async function showGenerateCodeModal(groupId) {
-        const modal = document.getElementById('generateCodeModal');
-        const inputDisplay = document.getElementById('invite_code_display');
-        const errorDisplay = document.getElementById('generateCodeError');
-        const copyBtn = document.getElementById('copyCodeBtn');
-
+    async function generateNewCode(groupId) {
+        const inputDisplay = document.getElementById('inviteCodeDisplay');
+        const originalValue = inputDisplay.value;
+        
         inputDisplay.value = "Gerando...";
-        copyBtn.disabled = true;
-        errorDisplay.style.display = 'none';
-        openModal('generateCodeModal');
-
+        
         try {
-            const response = await fetch(BASE_URL + 'group/generate_code/' + groupId, { method: 'POST' });
+            const response = await fetch(BASE_URL + 'group/generateInviteCode/' + groupId, {
+                method: 'POST'
+            });
             const data = await response.json();
 
             if (data.success) {
                 inputDisplay.value = data.code;
-                copyBtn.disabled = false;
-                copyBtn.setAttribute('data-code', data.code);
-
-                const pageInput = document.getElementById('config-invite-code-display');
-                if (pageInput) pageInput.value = data.code;
             } else {
-                throw new Error(data.error || 'Erro desconhecido.');
+                alert('Erro: ' + (data.error || 'Falha desconhecida'));
+                inputDisplay.value = originalValue;
             }
         } catch (error) {
-            inputDisplay.value = "Erro!";
-            errorDisplay.innerText = error.message;
-            errorDisplay.style.display = 'block';
+            console.error(error);
+            alert('Erro de conexão.');
+            inputDisplay.value = originalValue;
         }
     }
-
-    function copyToClipboard() {
-        const code = document.getElementById('copyCodeBtn').getAttribute('data-code');
-        navigator.clipboard.writeText(code).then(() => alert('Código copiado!'));
-    }
 </script>
-
 <?php require_once '../views/components/footer.php'; ?>
