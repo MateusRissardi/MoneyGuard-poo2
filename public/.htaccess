@@ -1,6 +1,6 @@
 # /public/.htaccess
 RewriteEngine On
-RewriteBase /MoneyGuard-poo2/public/
+RewriteBase /GitHub/MoneyGuard-poo2/public/
 
 # --- LINHA ADICIONADA ---
 # Se o URL começar com 'uploads/', não faça nada ([L] = Last rule)

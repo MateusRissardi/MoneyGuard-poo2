@@ -432,8 +432,8 @@ require_once '../views/components/footer.php';
 
     // Abre o modal para "Editar"
     function openEditModal(id_despesa) {
-        const BASE_URL = "/MoneyGuard-poo2/public/";
-
+        const BASE_URL = "/GitHub/MoneyGuard-poo2/public/";
+        
         fetch(BASE_URL + `expense/get_details/${id_despesa}`)
             .then(response => response.json())
             .then(data => {
