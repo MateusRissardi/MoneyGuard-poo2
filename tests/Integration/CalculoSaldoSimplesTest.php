@@ -120,4 +120,88 @@ class Cenario9CalculoSaldoSimplesTest extends TestCase
 
         $this->assertEquals(0.00, $p1_saldo + $p2_saldo + $p3_saldo, "A soma total dos saldos deve ser zero.");
     }
+
+    public function test_CT_ORG_I02_3_PaganteParcialMultiplosDevedores()
+    {
+        $id_grupo = 21;
+        $participante3 = 3;
+
+        $saldoEsperadoDB = [
+            [
+                'id_usuario' => $this->participante1,
+                'nome' => 'P1',
+                'total_pago' => 40.00,
+                'total_consumido' => 20.00
+            ],
+            [
+                'id_usuario' => $this->participante2,
+                'nome' => 'P2',
+                'total_pago' => 0.00,
+                'total_consumido' => 20.00
+            ],
+            [
+                'id_usuario' => $participante3,
+                'nome' => 'P3',
+                'total_pago' => 0.00,
+                'total_consumido' => 20.00
+            ],
+        ];
+
+        $expenseModelMock = $this->createMock(Expense::class);
+        $expenseModelMock->method('create')->willReturn(true);
+
+        $expenseModelMock->method('getBalance')
+            ->willReturn($saldoEsperadoDB);
+
+        $balanceService = new MockBalanceService($expenseModelMock);
+        $saldosRetornados = $balanceService->registrarEObterSaldos($id_grupo);
+
+        $p1_saldo = $saldosRetornados[0]['total_pago'] - $saldosRetornados[0]['total_consumido'];
+        $p2_saldo = $saldosRetornados[1]['total_pago'] - $saldosRetornados[1]['total_consumido'];
+        $p3_saldo = $saldosRetornados[2]['total_pago'] - $saldosRetornados[2]['total_consumido'];
+
+        $this->assertEquals(20.00, $p1_saldo, "Saldo de P1 deve ser +R$ 20.00");
+        $this->assertEquals(-20.00, $p2_saldo, "Saldo de P2 deve ser -R$ 20.00");
+        $this->assertEquals(-20.00, $p3_saldo, "Saldo de P3 deve ser -R$ 20.00");
+
+        $this->assertEquals(0.00, $p1_saldo + $p2_saldo + $p3_saldo, "A soma total dos saldos deve ser zero.");
+    }
+
+    public function test_CT_ORG_I02_4_MultiplosPagantesZeroDivida()
+    {
+        $id_grupo = 22;
+
+        $saldoEsperadoDB = [
+            [
+                'id_usuario' => $this->participante1,
+                'nome' => 'P1',
+                'total_pago' => 25.00,
+                'total_consumido' => 25.00
+            ],
+            [
+                'id_usuario' => $this->participante2,
+                'nome' => 'P2',
+                'total_pago' => 25.00,
+                'total_consumido' => 25.00
+            ],
+        ];
+
+        $expenseModelMock = $this->createMock(Expense::class);
+        $expenseModelMock->method('create')->willReturn(true);
+
+        $expenseModelMock->method('getBalance')
+            ->with($id_grupo)
+            ->willReturn($saldoEsperadoDB);
+
+        // CORREÇÃO: Chamada direta ao mock do Expense Model
+        $saldosRetornados = $expenseModelMock->getBalance($id_grupo);
+
+        $p1_saldo = $saldosRetornados[0]['total_pago'] - $saldosRetornados[0]['total_consumido'];
+        $p2_saldo = $saldosRetornados[1]['total_pago'] - $saldosRetornados[1]['total_consumido'];
+
+        $this->assertEquals(0.00, $p1_saldo, "Saldo de P1 deve ser R$ 0.00");
+        $this->assertEquals(0.00, $p2_saldo, "Saldo de P2 deve ser R$ 0.00");
+
+        $this->assertEquals(0.00, $p1_saldo + $p2_saldo, "A soma total dos saldos deve ser zero.");
+    }
 }

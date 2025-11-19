@@ -99,4 +99,28 @@ class Cenario10CalculoSaldoMultiplasTransacoesTest extends TestCase
 
         $this->assertEquals(0.00, array_sum($saldosCalculados), "A soma total dos saldos deve ser zero.");
     }
+
+    public function test_CT_ORG_I03_4_MultiplosPagantesDiferentesTransacoes()
+    {
+        $id_grupo = 34;
+
+        $saldoEsperadoDB = [
+            ['id_usuario' => $this->p1, 'total_pago' => 60.00, 'total_consumido' => 35.00],
+            ['id_usuario' => $this->p2, 'total_pago' => 30.00, 'total_consumido' => 35.00],
+            ['id_usuario' => $this->p3, 'total_pago' => 0.00, 'total_consumido' => 20.00],
+        ];
+
+        $expenseModelMock = $this->createMock(Expense::class);
+        $expenseModelMock->method('getBalance')->willReturn($saldoEsperadoDB);
+
+        $balanceService = new MockBalanceServiceMulti($expenseModelMock);
+        $saldosRetornados = $balanceService->obterSaldos($id_grupo);
+        $saldosCalculados = $this->calcularSaldos($saldosRetornados);
+
+        $this->assertEquals(25.00, $saldosCalculados[$this->p1], "Saldo P1 deve ser +R$ 25.00");
+        $this->assertEquals(-5.00, $saldosCalculados[$this->p2], "Saldo P2 deve ser -R$ 5.00");
+        $this->assertEquals(-20.00, $saldosCalculados[$this->p3], "Saldo P3 deve ser -R$ 20.00");
+
+        $this->assertEquals(0.00, array_sum($saldosCalculados), "A soma total dos saldos deve ser zero.");
+    }
 }
