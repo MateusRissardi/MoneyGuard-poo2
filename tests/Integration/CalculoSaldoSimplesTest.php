@@ -130,7 +130,7 @@ class Cenario9CalculoSaldoSimplesTest extends TestCase
             [
                 'id_usuario' => $this->participante1,
                 'nome' => 'P1',
-                'total_pago' => 40.00,
+                'total_pago' => 60.00,
                 'total_consumido' => 20.00
             ],
             [
@@ -160,7 +160,7 @@ class Cenario9CalculoSaldoSimplesTest extends TestCase
         $p2_saldo = $saldosRetornados[1]['total_pago'] - $saldosRetornados[1]['total_consumido'];
         $p3_saldo = $saldosRetornados[2]['total_pago'] - $saldosRetornados[2]['total_consumido'];
 
-        $this->assertEquals(20.00, $p1_saldo, "Saldo de P1 deve ser +R$ 20.00");
+        $this->assertEquals(40.00, $p1_saldo, "Saldo de P1 deve ser +R$ 40.00");
         $this->assertEquals(-20.00, $p2_saldo, "Saldo de P2 deve ser -R$ 20.00");
         $this->assertEquals(-20.00, $p3_saldo, "Saldo de P3 deve ser -R$ 20.00");
 
