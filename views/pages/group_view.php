@@ -605,13 +605,13 @@ function getCategoryColorClass($categoria)
         displayInput.value = "Gerando...";
         openModal('modal-show-code');
 
-        const BASE_URL = "/GitHub/MoneyGuard-poo2/public/";
-
-        fetch(BASE_URL + `group/generate_code/${id_grupo}`, {
+        const BASE_URL = "/MoneyGuard-poo2/public/";
+        fetch(BASE_URL + `group/generateInviteCode/${id_grupo}`, {
                 method: 'POST'
             })
             .then(response => response.json())
             .then(data => {
+
                 if (data.success) {
                     displayInput.value = data.code;
                     const codeDisplayEmpty = document.getElementById('empty-state-code');
