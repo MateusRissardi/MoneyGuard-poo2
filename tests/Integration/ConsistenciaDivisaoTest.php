@@ -135,14 +135,12 @@ class Cenario8ConsistenciaDivisaoTest extends TestCase
     
     $expenseModelMock = $this->createMock(Expense::class);
     
-    // Expectativa: NUNCA chama o método create, pois a validação de RN-ORG02 deve bloquear.
     $expenseModelMock->expects($this->never())
                      ->method('create');
                          
     $controller = new MockExpenseControllerIntegration($expenseModelMock);
     $controller->simularCreateManual($postData);
 
-    // MENSAGEM ESPERADA CORRIGIDA: A despesa falha porque a SOMA (0.00) é diferente do TOTAL (50.00).
     $errorMessage = urlencode("Soma da divisão manual (R$ 0) não bate com o Valor Total (R$ 50). (RN-ORG02)");
     $expectedUrl = "group/view/{$postData['id_grupo']}?error={$errorMessage}";
     

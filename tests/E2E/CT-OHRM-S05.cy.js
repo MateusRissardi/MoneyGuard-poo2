@@ -1,10 +1,8 @@
 describe('RT-OHRM-S05 - Aprovação e Contratação de Candidato', () => {
   
   beforeEach(() => {
-    // 1. Resolução Full HD para evitar menu escondido
     cy.viewport(1920, 1080) 
 
-    // 2. Login Administrativo
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
     cy.get('input[name="username"]').type('Admin')
     cy.get('input[name="password"]').type('admin123')

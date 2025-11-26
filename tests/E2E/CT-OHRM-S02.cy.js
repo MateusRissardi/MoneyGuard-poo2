@@ -32,7 +32,6 @@ describe('OrangeHRM Demo - Validação de Força da Senha (RT-OHRM-S02)', () => 
     cy.get('input[name="firstName"]').type('Joao')
     cy.get('input[name="lastName"]').type('Teste')
 
-    // CORREÇÃO AQUI
     cy.contains('.oxd-label', 'Username').parents('.oxd-input-group').find('input').type('senhaSemNumero')
     cy.contains('.oxd-label', 'Password').parents('.oxd-input-group').find('input').type('SenhaAbc')
     cy.contains('.oxd-label', 'Confirm Password').parents('.oxd-input-group').find('input').type('SenhaAbc')
@@ -46,7 +45,6 @@ describe('OrangeHRM Demo - Validação de Força da Senha (RT-OHRM-S02)', () => 
     cy.get('input[name="firstName"]').type('Fulano')
     cy.get('input[name="lastName"]').type('Valido')
 
-    // CORREÇÃO AQUI
     cy.contains('.oxd-label', 'Username').parents('.oxd-input-group').find('input').type('userValido')
     cy.contains('.oxd-label', 'Password').parents('.oxd-input-group').find('input').type('Admin123')
     cy.contains('.oxd-label', 'Confirm Password').parents('.oxd-input-group').find('input').type('Admin123')

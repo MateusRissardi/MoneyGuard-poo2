@@ -44,14 +44,14 @@ class Cenario9CalculoSaldoSimplesTest extends TestCase
             [
                 'id_usuario' => $this->participante1,
                 'nome' => 'P1',
-                'total_pago' => 100.00, // Pagou 100
-                'total_consumido' => 0.00 // Consumiu 0
+                'total_pago' => 100.00,
+                'total_consumido' => 0.00
             ],
             [
                 'id_usuario' => $this->participante2,
                 'nome' => 'P2',
-                'total_pago' => 0.00, // Pagou 0
-                'total_consumido' => 100.00 // Consumiu 100
+                'total_pago' => 0.00,
+                'total_consumido' => 100.00
             ],
         ];
 
@@ -193,7 +193,6 @@ class Cenario9CalculoSaldoSimplesTest extends TestCase
             ->with($id_grupo)
             ->willReturn($saldoEsperadoDB);
 
-        // CORREÇÃO: Chamada direta ao mock do Expense Model
         $saldosRetornados = $expenseModelMock->getBalance($id_grupo);
 
         $p1_saldo = $saldosRetornados[0]['total_pago'] - $saldosRetornados[0]['total_consumido'];

@@ -3,7 +3,6 @@ describe('RT-OHRM-S07 - Busca de Empregado Inexistente (PIM)', () => {
   beforeEach(() => {
     cy.viewport(1920, 1080) 
     
-    // Login como Admin
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
     cy.get('input[name="username"]').type('Admin')
     cy.get('input[name="password"]').type('admin123')
